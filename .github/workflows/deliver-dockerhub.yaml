@@ -91,6 +91,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: kostaleonard/renaissance-man-app:latest,kostaleonard/renaissance-man-app:${{ ${{needs.build.outputs.RENAISSANCE_MAN_BUILD_VERSION }}
+          tags: kostaleonard/renaissance-man-app:latest,kostaleonard/renaissance-man-app:${{ needs.build.outputs.RENAISSANCE_MAN_BUILD_VERSION }}
           cache-from: type=gha
           cache-to: type=gha
