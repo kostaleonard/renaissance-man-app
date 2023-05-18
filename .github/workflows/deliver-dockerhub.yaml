@@ -51,7 +51,7 @@ jobs:
           name: renaissance-man-image
           path: /tmp/renaissance_man.tar
     outputs:
-      RENAISSANCE_MAN_BUILD_VERSION: steps.get_version.outputs.RENAISSANCE_MAN_BUILD_VERSION
+      RENAISSANCE_MAN_BUILD_VERSION: ${{ steps.get_version.outputs.RENAISSANCE_MAN_BUILD_VERSION }}
   trivy-scan:
     needs: [build]
     runs-on: ubuntu-latest
