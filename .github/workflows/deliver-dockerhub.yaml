@@ -73,8 +73,7 @@ jobs:
   deliver:
     needs: [build, trivy-scan]
     runs-on: ubuntu-latest
-    # TODO only on release
-    #if: github.event_name == 'release'
+    if: github.event_name == 'release'
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
