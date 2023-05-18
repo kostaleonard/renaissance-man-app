@@ -26,13 +26,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Get version
+      - id: get_version
+        name: Get version
         run: |
-          echo "RENAISSANCE_MAN_BUILD_VERSION=$(python get_app_version.py)" >> $GITHUB_ENV
+          echo "RENAISSANCE_MAN_BUILD_VERSION=$(python get_app_version.py)" >> $GITHUB_OUTPUT
       - name: Check version
         run: |
           echo RENAISSANCE_MAN_BUILD_VERSION
-          echo ${{ env.RENAISSANCE_MAN_BUILD_VERSION }}
+          echo ${{ steps.get_version.outputs.RENAISSANCE_MAN_BUILD_VERSION }}
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
@@ -40,7 +41,7 @@ jobs:
       - name: Build image
         uses: docker/build-push-action@v3
         with:
-          tags: kostaleonard/renaissance-man-app:latest,kostaleonard/renaissance-man-app:${{ env.RENAISSANCE_MAN_BUILD_VERSION }}
+          tags: kostaleonard/renaissance-man-app:latest,kostaleonard/renaissance-man-app:${{ steps.get_version.outputs.RENAISSANCE_MAN_BUILD_VERSION }}
           outputs: type=docker,dest=/tmp/renaissance_man.tar
           cache-from: type=gha
           cache-to: type=gha
@@ -49,6 +50,8 @@ jobs:
         with:
           name: renaissance-man-image
           path: /tmp/renaissance_man.tar
+    outputs:
+      RENAISSANCE_MAN_BUILD_VERSION: steps.get_version.outputs.RENAISSANCE_MAN_BUILD_VERSION
   trivy-scan:
     needs: [build]
     runs-on: ubuntu-latest
@@ -68,7 +71,7 @@ jobs:
           vuln-type: 'os,library'
           severity: 'CRITICAL,HIGH'
   deliver:
-    needs: [trivy-scan]
+    needs: [build, trivy-scan]
     runs-on: ubuntu-latest
     # TODO only on release
     #if: github.event_name == 'release'
@@ -88,6 +91,6 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: kostaleonard/renaissance-man-app:latest,kostaleonard/renaissance-man-app:${{ env.RENAISSANCE_MAN_BUILD_VERSION }}
+          tags: kostaleonard/renaissance-man-app:latest,kostaleonard/renaissance-man-app:${{ ${{needs.build.outputs.RENAISSANCE_MAN_BUILD_VERSION }}
           cache-from: type=gha
           cache-to: type=gha
