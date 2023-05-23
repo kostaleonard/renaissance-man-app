@@ -7,7 +7,7 @@ void main() {
 }
 
 class RenaissanceManApp extends StatelessWidget {
-  static const titleText = 'Renaissance Man';
+  static const appTitle = 'Renaissance Man';
 
   const RenaissanceManApp({super.key});
 
@@ -20,7 +20,6 @@ class RenaissanceManApp extends StatelessWidget {
               backgroundColor: Colors.indigo, foregroundColor: Colors.white),
         ),
         home: Scaffold(
-            appBar: AppBar(title: const Text(titleText)),
-            body: const Column()));
+            appBar: AppBar(title: const Text(appTitle)), body: const Column()));
   }
 }
