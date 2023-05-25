@@ -1,6 +1,8 @@
 /// Runs the app.
 
 import 'package:flutter/material.dart';
+import 'package:renaissance_man/skill.dart';
+import 'package:renaissance_man/skill_preview_card.dart';
 
 void main() {
   runApp(const RenaissanceManApp());
@@ -8,7 +10,13 @@ void main() {
 
 class RenaissanceManApp extends StatelessWidget {
   static const appTitle = 'Renaissance Man';
-  static const skills = ['Piano', 'Russian', 'Cooking', 'Coding']; // TODO this is test data
+  static const skills = [
+    Skill(name: 'Piano'),
+    Skill(name: 'Russian'),
+    Skill(name: 'Cooking'),
+    Skill(name: 'Coding'),
+    Skill(name: 'Weight lifting')
+  ]; // TODO this is test data
 
   const RenaissanceManApp({super.key});
 
@@ -28,9 +36,7 @@ class RenaissanceManApp extends StatelessWidget {
               itemBuilder: (context, i) {
                 if (i.isOdd) return const Divider();
                 final index = i ~/ 2;
-                return ListTile(
-                    leading: const Icon(Icons.bolt),
-                    title: Text(skills[index]));
+                return SkillPreviewCard(skill: skills[index]);
               }),
           floatingActionButton: FloatingActionButton(
             onPressed: () => (), // TODO add skill API call
