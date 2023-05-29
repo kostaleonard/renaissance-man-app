@@ -1,0 +1,3 @@
+class SkillCandidate {
+  // TODO
+}

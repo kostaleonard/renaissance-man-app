@@ -8,6 +8,7 @@ void main() {
   runApp(const RenaissanceManApp());
 }
 
+// TODO docstrings
 class RenaissanceManApp extends StatelessWidget {
   static const appTitle = 'Renaissance Man';
   static const skills = [
@@ -23,7 +24,7 @@ class RenaissanceManApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Renaissance Man',
+        title: appTitle,
         theme: ThemeData(
           appBarTheme: const AppBarTheme(
               backgroundColor: Colors.blueGrey, foregroundColor: Colors.white),
