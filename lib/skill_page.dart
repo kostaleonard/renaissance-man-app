@@ -6,7 +6,7 @@ import 'package:renaissance_man/skill_repository.dart';
 class SkillPage extends StatefulWidget {
   final SkillRepository skillRepository;
 
-  SkillPage({Key? key, required this.skillRepository}) : super(key: key);
+  const SkillPage({Key? key, required this.skillRepository}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SkillPageState();
