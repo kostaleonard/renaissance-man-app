@@ -1,7 +1,6 @@
 /// Provides an interface with storage media for skill data.
 
 import 'package:renaissance_man/skill.dart';
-import 'package:renaissance_man/skill_candidate.dart';
 
 /// Implements create, read, update, and delete methods for tracked skills.
 ///
@@ -15,25 +14,25 @@ import 'package:renaissance_man/skill_candidate.dart';
 abstract class SkillRepository {
   /// Creates a [Skill] in backend storage and returns it on success.
   ///
-  /// Uses the information in [skillCandidate] to create a full-fledged [Skill]
-  /// in backend storage. If an equivalent [Skill] already exists, throws
+  /// Creates a [Skill] with [name] in backend storage. If a [Skill] with that
+  /// name already exists, throws
   /// TODO do we actually want to throw an error?
-  Future<Skill> createSkill(SkillCandidate skillCandidate);
+  Future<Skill> createSkill(String name);
 
   /// Returns a list of [Skill]s from backend storage.
   ///
   /// Returns the first [limit] or fewer [Skill]s from backend storage, skipping
   /// the first [skip] elements, where [Skill]s are sorted chronologically by
-  /// creation time.
+  /// creation time. If [limit] is not specified, returns all [Skill]s.
   /// TODO sorted chronologically? Or by displayOrder?
-  Future<List<Skill>> readSkills(int limit, {int skip = 0});
+  Future<List<Skill>> readSkills({int? limit, int skip = 0});
 
-  /// Updates a [Skill] in backend storage and returns it on success.
+  /// Updates a [Skill] in backend storage and returns the new value on success.
   ///
-  /// Updates the [Skill] in backend storage with the same name as
-  /// [skillCandidate]. If no such [Skill] exists, throws
+  /// If no such [Skill] exists, throws
   /// TODO which error?
-  Future<Skill> updateSkill(SkillCandidate skillCandidate);
+  /// TODO what are the arguments for the new values? Get the current skill's JSON representation, update it, and create a new Skill from it?
+  Future<Skill> updateSkill(Skill skill);
 
   /// Deletes a [Skill] from backend storage.
   ///
