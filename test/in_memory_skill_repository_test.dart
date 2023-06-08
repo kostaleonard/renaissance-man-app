@@ -20,6 +20,16 @@ void main() {
 
   test('createSkill gives skill a unique ID', () async {
     final repository = InMemorySkillRepository();
-    // TODO
+    final skill1 = await repository.createSkill('Piano');
+    final skill2 = await repository.createSkill('Cooking');
+    final skill3 = await repository.createSkill('Running');
+    expect({skill1.id, skill2.id, skill3.id}.length, 3);
+  });
+
+  test('createSkill throws an error when a skill with the same name already exists', () async {
+    final repository = InMemorySkillRepository();
+    //TODO it seems like I shouldn't be making the unused variable name ("_") final
+    final _ = await repository.createSkill('Piano');
+    expect(() async => await repository.createSkill('Piano'), throwsArgumentError);
   });
 }

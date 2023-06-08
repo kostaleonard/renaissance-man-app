@@ -3,7 +3,7 @@
 class Skill {
   final int id;
   final String name;
-  final int displayOrder;
+  final int displayOrder; // TODO is displayOrder necessary? Or do we want to use a linked list structure?
   final DateTime createdAt;
 
   const Skill(
