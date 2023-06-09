@@ -1,7 +1,5 @@
 //TODO docstrings
 
-import 'dart:js_interop';
-
 import 'package:renaissance_man/skill.dart';
 import 'package:renaissance_man/skill_repository.dart';
 
@@ -36,10 +34,10 @@ class InMemorySkillRepository extends SkillRepository {
   @override
   Future<List<Skill>> readSkills({int? limit, int skip = 0}) {
     final skillsAfterSkip = _skills.skip(skip);
-    if (limit.isUndefined) {
+    if (limit == null) {
       return Future.value(skillsAfterSkip.toList());
     }
-    return Future.value(skillsAfterSkip.take(limit!).toList());
+    return Future.value(skillsAfterSkip.take(limit).toList());
   }
 
   @override

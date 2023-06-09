@@ -26,10 +26,48 @@ void main() {
     expect({skill1.id, skill2.id, skill3.id}.length, 3);
   });
 
-  test('createSkill throws an error when a skill with the same name already exists', () async {
+  test(
+      'createSkill throws an error when a skill with the same name already exists',
+      () async {
     final repository = InMemorySkillRepository();
-    //TODO it seems like I shouldn't be making the unused variable name ("_") final
     final _ = await repository.createSkill('Piano');
-    expect(() async => await repository.createSkill('Piano'), throwsArgumentError);
+    expect(
+        () async => await repository.createSkill('Piano'), throwsArgumentError);
+  });
+
+  test('readSkills returns skills in order', () async {
+    final repository = InMemorySkillRepository();
+    final skill1 = await repository.createSkill('Piano');
+    final skill2 = await repository.createSkill('Cooking');
+    final skill3 = await repository.createSkill('Running');
+    final skills = await repository.readSkills();
+    expect(skills, [skill1, skill2, skill3]);
+  });
+
+  test('readSkills returns skills up to limit', () async {
+    final repository = InMemorySkillRepository();
+    final skill1 = await repository.createSkill('Piano');
+    final skill2 = await repository.createSkill('Cooking');
+    final _ = await repository.createSkill('Running');
+    final skills = await repository.readSkills(limit: 2);
+    expect(skills, [skill1, skill2]);
+  });
+
+  test('readSkills returns skills with skip', () async {
+    final repository = InMemorySkillRepository();
+    final _ = await repository.createSkill('Piano');
+    final skill2 = await repository.createSkill('Cooking');
+    final skill3 = await repository.createSkill('Running');
+    final skills = await repository.readSkills(skip: 1);
+    expect(skills, [skill2, skill3]);
+  });
+
+  test('readSkills returns skills with skip and limit', () async {
+    final repository = InMemorySkillRepository();
+    final _ = await repository.createSkill('Piano');
+    final skill2 = await repository.createSkill('Cooking');
+    final __ = await repository.createSkill('Running');
+    final skills = await repository.readSkills(limit: 1, skip: 1);
+    expect(skills, [skill2]);
   });
 }
