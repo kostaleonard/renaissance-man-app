@@ -42,13 +42,16 @@ class InMemorySkillRepository extends SkillRepository {
 
   @override
   Future<Skill> updateSkill(Skill skill) {
-    // TODO: implement updateSkill
+    // TODO not sure what update needs to look like yet
     throw UnimplementedError();
   }
 
   @override
   Future<void> deleteSkill(Skill skill) {
-    _skills.remove(skill);
-    return Future.value(null);
+    final foundSkill = _skills.remove(skill);
+    if (foundSkill) {
+      return Future.value(null);
+    }
+    throw ArgumentError('The repository does not contain skill $skill');
   }
 }

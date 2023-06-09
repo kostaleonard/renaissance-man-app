@@ -12,11 +12,28 @@ void main() {
 class RenaissanceManApp extends StatelessWidget {
   static const appTitle = 'Renaissance Man';
   static List<Skill> skills = [
-    Skill(id: 0, name: 'Piano', displayOrder: 0, createdAt: DateTime(2023, 1, 1)),
-    Skill(id: 1, name: 'Russian', displayOrder: 1, createdAt: DateTime(2023, 1, 2)),
-    Skill(id: 2, name: 'Cooking', displayOrder: 2, createdAt: DateTime(2023, 1, 3)),
-    Skill(id: 3, name: 'Coding', displayOrder: 3, createdAt: DateTime(2023, 1, 4)),
-    Skill(id: 4, name: 'Weight lifting', displayOrder: 4, createdAt: DateTime(2023, 1, 5))
+    Skill(
+        id: 0, name: 'Piano', displayOrder: 0, createdAt: DateTime(2023, 1, 1)),
+    Skill(
+        id: 1,
+        name: 'Russian',
+        displayOrder: 1,
+        createdAt: DateTime(2023, 1, 2)),
+    Skill(
+        id: 2,
+        name: 'Cooking',
+        displayOrder: 2,
+        createdAt: DateTime(2023, 1, 3)),
+    Skill(
+        id: 3,
+        name: 'Coding',
+        displayOrder: 3,
+        createdAt: DateTime(2023, 1, 4)),
+    Skill(
+        id: 4,
+        name: 'Weight lifting',
+        displayOrder: 4,
+        createdAt: DateTime(2023, 1, 5))
   ]; // TODO this is test data
 
   const RenaissanceManApp({super.key});

@@ -70,4 +70,22 @@ void main() {
     final skills = await repository.readSkills(limit: 1, skip: 1);
     expect(skills, [skill2]);
   });
+
+  test('deleteSkill removes skill from repository', () async {
+    final repository = InMemorySkillRepository();
+    final skill1 = await repository.createSkill('Piano');
+    final skill2 = await repository.createSkill('Cooking');
+    final skill3 = await repository.createSkill('Running');
+    await repository.deleteSkill(skill2);
+    final skills = await repository.readSkills();
+    expect(skills, [skill1, skill3]);
+  });
+
+  test('deleteSkill throws an error if the skill does not exist', () async {
+    final repository = InMemorySkillRepository();
+    final skill1 = await repository.createSkill('Piano');
+    await repository.deleteSkill(skill1);
+    expect(
+        () async => await repository.deleteSkill(skill1), throwsArgumentError);
+  });
 }

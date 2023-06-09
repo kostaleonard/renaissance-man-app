@@ -15,8 +15,7 @@ abstract class SkillRepository {
   /// Creates a [Skill] in backend storage and returns it on success.
   ///
   /// Creates a [Skill] with [name] in backend storage. If a [Skill] with that
-  /// name already exists, throws
-  /// TODO do we actually want to throw an error?
+  /// name already exists, throws an [ArgumentError].
   Future<Skill> createSkill(String name);
 
   /// Returns a list of [Skill]s from backend storage.

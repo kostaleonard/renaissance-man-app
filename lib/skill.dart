@@ -3,7 +3,8 @@
 class Skill {
   final int id;
   final String name;
-  final int displayOrder; // TODO is displayOrder necessary? Or do we want to use a linked list structure?
+  final int
+      displayOrder; // TODO is displayOrder necessary? Or do we want to use a linked list structure?
   final DateTime createdAt;
 
   const Skill(
@@ -11,4 +12,9 @@ class Skill {
       required this.name,
       required this.displayOrder,
       required this.createdAt});
+
+  @override
+  String toString() {
+    return name;
+  }
 }
