@@ -35,7 +35,6 @@ abstract class SkillRepository {
 
   /// Deletes a [Skill] from backend storage.
   ///
-  /// If no such [Skill] exists, throws
-  /// TODO which error?
+  /// If no such [Skill] exists, throws an [ArgumentError].
   Future<void> deleteSkill(Skill skill);
 }
