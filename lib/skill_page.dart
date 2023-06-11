@@ -37,32 +37,25 @@ class _SkillPageState extends State<SkillPage> {
           children: [
             FutureBuilder(
               future: skillQuery,
-              builder:
-                  (BuildContext context, AsyncSnapshot<List<Skill>> snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                    return Container();
-                  case ConnectionState.waiting:
-                    return const Center(child: CircularProgressIndicator());
-                  default:
-                    if (snapshot.hasError) {
-                      return const Center(
-                          child: Text('No connection; try again later',
-                              style: _biggerFont));
-                    } else {
-                      final skillsToDisplay = snapshot.data ?? [];
-                      return Expanded(
-                          child: ListView.builder(
-                              // TODO make this a separate class to reduce clutter in this file
-                              itemCount: skillsToDisplay.length * 2,
-                              padding: const EdgeInsets.all(8),
-                              itemBuilder: (context, i) {
-                                if (i.isOdd) return const Divider();
-                                final index = i ~/ 2;
-                                return SkillPreviewCard(
-                                    skill: skillsToDisplay[index]);
-                              }));
-                    }
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return const Center(
+                      child: Text('No connection; try again later',
+                          style: _biggerFont));
+                } else {
+                  final skillsToDisplay = snapshot.data ?? [];
+                  return Expanded(
+                      child: ListView.builder(
+                          itemCount: skillsToDisplay.length * 2,
+                          padding: const EdgeInsets.all(8),
+                          itemBuilder: (context, i) {
+                            if (i.isOdd) return const Divider();
+                            final index = i ~/ 2;
+                            return SkillPreviewCard(
+                                skill: skillsToDisplay[index]);
+                          }));
                 }
               },
             ),
