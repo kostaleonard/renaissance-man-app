@@ -10,6 +10,7 @@ void main() {
     await tester.pumpWidget(RenaissanceManApp(
       skillRepository: InMemorySkillRepository(),
     ));
+    await tester.pumpAndSettle();
     expect(find.text(RenaissanceManApp.appTitle), findsOneWidget);
   });
 }

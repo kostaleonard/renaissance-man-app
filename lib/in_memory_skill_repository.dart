@@ -15,6 +15,9 @@ class InMemorySkillRepository extends SkillRepository {
   // - (deleteSkill) Find the skill object in the repository
   // - (deleteSkill) Remove a skill from the repository, correcting the display order of other elements
   var _nextAvailableId = 0;
+  final Duration withDelay;
+
+  InMemorySkillRepository({this.withDelay = Duration.zero});
 
   @override
   Future<Skill> createSkill(String name) {
@@ -28,16 +31,17 @@ class InMemorySkillRepository extends SkillRepository {
         displayOrder: 0);
     _nextAvailableId++;
     _skills.add(skill);
-    return Future.value(skill);
+    return Future.delayed(withDelay, () => skill);
   }
 
   @override
   Future<List<Skill>> readSkills({int? limit, int skip = 0}) {
     final skillsAfterSkip = _skills.skip(skip);
     if (limit == null) {
-      return Future.value(skillsAfterSkip.toList());
+      return Future.delayed(withDelay, () => skillsAfterSkip.toList());
     }
-    return Future.value(skillsAfterSkip.take(limit).toList());
+    return Future.delayed(
+        withDelay, () => skillsAfterSkip.take(limit).toList());
   }
 
   @override
@@ -50,7 +54,7 @@ class InMemorySkillRepository extends SkillRepository {
   Future<void> deleteSkill(Skill skill) {
     final foundSkill = _skills.remove(skill);
     if (foundSkill) {
-      return Future.value(null);
+      return Future.delayed(withDelay, () => null);
     }
     throw ArgumentError('The repository does not contain skill $skill');
   }

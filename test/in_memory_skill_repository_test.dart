@@ -83,9 +83,23 @@ void main() {
 
   test('deleteSkill throws an error if the skill does not exist', () async {
     final repository = InMemorySkillRepository();
-    final skill1 = await repository.createSkill('Piano');
-    await repository.deleteSkill(skill1);
+    final skill = await repository.createSkill('Piano');
+    await repository.deleteSkill(skill);
     expect(
-        () async => await repository.deleteSkill(skill1), throwsArgumentError);
+        () async => await repository.deleteSkill(skill), throwsArgumentError);
+  });
+
+  test('Initializing the repository with a delay causes delayed operations',
+      () async {
+    final repository =
+        InMemorySkillRepository(withDelay: const Duration(milliseconds: 100));
+    DateTime start = DateTime.now();
+    final _ = await repository.createSkill('Piano');
+    DateTime end = DateTime.now();
+    final minimumDifferenceWithErrorBuffer =
+        repository.withDelay - const Duration(milliseconds: 10);
+    expect(
+        end.difference(start).compareTo(minimumDifferenceWithErrorBuffer) > 0,
+        isTrue);
   });
 }

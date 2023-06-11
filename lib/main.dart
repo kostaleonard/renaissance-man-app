@@ -7,7 +7,10 @@ import 'package:renaissance_man/skill_repository.dart';
 import 'in_memory_skill_repository.dart';
 
 void main() {
-  runApp(RenaissanceManApp(skillRepository: InMemorySkillRepository()));
+  //TODO remove delay--it's only for seeing how UI components render
+  runApp(RenaissanceManApp(
+      skillRepository:
+          InMemorySkillRepository(withDelay: const Duration(seconds: 2))));
 }
 
 // TODO docstrings
