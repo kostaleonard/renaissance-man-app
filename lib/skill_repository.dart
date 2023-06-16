@@ -14,8 +14,8 @@ import 'package:renaissance_man/skill.dart';
 abstract class SkillRepository {
   /// Creates a [Skill] in backend storage and returns it on success.
   ///
-  /// Creates a [Skill] with [name] in backend storage. If a [Skill] with that
-  /// name already exists, throws an [ArgumentError].
+  /// Creates a [Skill] with name [name] in backend storage. Multiple [Skill]s
+  /// may have the same name.
   Future<Skill> createSkill(String name);
 
   /// Returns a list of [Skill]s from backend storage.
@@ -23,18 +23,16 @@ abstract class SkillRepository {
   /// Returns the first [limit] or fewer [Skill]s from backend storage, skipping
   /// the first [skip] elements, where [Skill]s are sorted chronologically by
   /// creation time. If [limit] is not specified, returns all [Skill]s.
-  /// TODO sorted chronologically? Or by displayOrder?
   Future<List<Skill>> readSkills({int? limit, int skip = 0});
 
   /// Updates a [Skill] in backend storage and returns the new value on success.
   ///
-  /// If no such [Skill] exists, throws
-  /// TODO which error?
+  /// If there is no [Skill] with ID [id], throws an [ArgumentError].
   /// TODO what are the arguments for the new values? Get the current skill's JSON representation, update it, and create a new Skill from it?
-  Future<Skill> updateSkill(Skill skill);
+  Future<Skill> updateSkill(int id);
 
   /// Deletes a [Skill] from backend storage.
   ///
-  /// If no such [Skill] exists, throws an [ArgumentError].
-  Future<void> deleteSkill(Skill skill);
+  /// If there is no [Skill] with ID [id], throws an [ArgumentError].
+  Future<void> deleteSkill(int id);
 }

@@ -21,16 +21,9 @@ class InMemorySkillRepository extends SkillRepository {
 
   @override
   Future<Skill> createSkill(String name) {
-    if (_skills.any((element) => element.name == name)) {
-      throw ArgumentError('A skill with name $name already exists');
-    }
-    final skill = Skill(
-        id: _nextAvailableId,
-        name: name,
-        createdAt: DateTime.now(),
-        displayOrder: 0);
+    final skill = Skill(id: _nextAvailableId, name: name);
     _nextAvailableId++;
-    _skills.add(skill);
+    _skills.add(skill); //TODO this should be prepend
     return Future.delayed(withDelay, () => skill);
   }
 
@@ -45,17 +38,18 @@ class InMemorySkillRepository extends SkillRepository {
   }
 
   @override
-  Future<Skill> updateSkill(Skill skill) {
+  Future<Skill> updateSkill(int id) {
     // TODO not sure what update needs to look like yet
     throw UnimplementedError();
   }
 
   @override
-  Future<void> deleteSkill(Skill skill) {
-    final foundSkill = _skills.remove(skill);
-    if (foundSkill) {
-      return Future.delayed(withDelay, () => null);
+  Future<void> deleteSkill(int id) {
+    final lengthBeforeRemove = _skills.length;
+    _skills.removeWhere((skill) => skill.id == id);
+    if (_skills.length == lengthBeforeRemove) {
+      throw ArgumentError('The repository does not contain skill $id');
     }
-    throw ArgumentError('The repository does not contain skill $skill');
+    return Future.delayed(withDelay, () => null);
   }
 }

@@ -1,7 +1,7 @@
 /// Runs the app.
 
 import 'package:flutter/material.dart';
-import 'package:renaissance_man/skill_page.dart';
+import 'package:renaissance_man/skill_select_page.dart';
 import 'package:renaissance_man/skill_repository.dart';
 
 import 'in_memory_skill_repository.dart';
@@ -28,7 +28,7 @@ class RenaissanceManApp extends StatelessWidget {
           appBarTheme: const AppBarTheme(
               backgroundColor: Colors.blueGrey, foregroundColor: Colors.white),
         ),
-        home: SkillPage(
+        home: SkillSelectPage(
           skillRepository: skillRepository,
         ));
   }

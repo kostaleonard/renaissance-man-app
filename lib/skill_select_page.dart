@@ -5,16 +5,16 @@ import 'package:renaissance_man/skill.dart';
 import 'package:renaissance_man/skill_preview_card.dart';
 import 'package:renaissance_man/skill_repository.dart';
 
-class SkillPage extends StatefulWidget {
+class SkillSelectPage extends StatefulWidget {
   final SkillRepository skillRepository;
 
-  const SkillPage({Key? key, required this.skillRepository}) : super(key: key);
+  const SkillSelectPage({Key? key, required this.skillRepository}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SkillPageState();
+  State<StatefulWidget> createState() => _SkillSelectPageState();
 }
 
-class _SkillPageState extends State<SkillPage> {
+class _SkillSelectPageState extends State<SkillSelectPage> {
   static const _biggerFont = TextStyle(fontSize: 18);
   late Future<List<Skill>> skillQuery;
 
@@ -42,8 +42,7 @@ class _SkillPageState extends State<SkillPage> {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return const Center(
-                      child: Text('No connection; try again later',
-                          style: _biggerFont));
+                      child: Text('No connection', style: _biggerFont));
                 } else {
                   final skillsToDisplay = snapshot.data ?? [];
                   return Expanded(
