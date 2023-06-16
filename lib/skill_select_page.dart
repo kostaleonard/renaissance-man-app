@@ -1,5 +1,6 @@
 /// Displays the user's tracked skills.
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:renaissance_man/skill.dart';
 import 'package:renaissance_man/skill_preview_card.dart';
@@ -8,7 +9,8 @@ import 'package:renaissance_man/skill_repository.dart';
 class SkillSelectPage extends StatefulWidget {
   final SkillRepository skillRepository;
 
-  const SkillSelectPage({Key? key, required this.skillRepository}) : super(key: key);
+  const SkillSelectPage({Key? key, required this.skillRepository})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SkillSelectPageState();
@@ -35,7 +37,18 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
         appBar: AppBar(title: const Text('Renaissance Man')),
         body: Column(
           children: [
-            //TODO button?
+            TextField(
+              // TODO see Populare
+            ),
+            CupertinoButton.filled(
+                onPressed: () {
+                  setState(() {
+                    widget.skillRepository.createSkill(
+                        'New skill'); //TODO user should choose name
+                    skillQuery = widget.skillRepository.readSkills();
+                  });
+                },
+                child: const Icon(Icons.add)),
             FutureBuilder(
               future: skillQuery,
               builder: (context, snapshot) {
