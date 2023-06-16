@@ -4,16 +4,7 @@ import 'package:renaissance_man/skill.dart';
 import 'package:renaissance_man/skill_repository.dart';
 
 class InMemorySkillRepository extends SkillRepository {
-  final _skills =
-      <Skill>[]; //TODO consider a better data structure once we see what kinds of operations the methods need
-  // TODO common operations:
-  // - (createSkill) Add a skill at the top of the display order (shown first)
-  // - (createSkill) Find the next available ID to give a skill
-  // - (createSkill) Find a skill with the same name, if any, to prevent duplicates
-  // - (readSkills) Get the next subset of skills to be displayed on screen (order by display order)
-  // - (updateSkill) Find the skill object in the repository
-  // - (deleteSkill) Find the skill object in the repository
-  // - (deleteSkill) Remove a skill from the repository, correcting the display order of other elements
+  final _skills = <Skill>[]; // TODO would like data structure with O(1) prepend
   var _nextAvailableId = 0;
   final Duration withDelay;
 
@@ -23,7 +14,7 @@ class InMemorySkillRepository extends SkillRepository {
   Future<Skill> createSkill(String name) {
     final skill = Skill(id: _nextAvailableId, name: name);
     _nextAvailableId++;
-    _skills.add(skill); //TODO this should be prepend
+    _skills.insert(0, skill);
     return Future.delayed(withDelay, () => skill);
   }
 

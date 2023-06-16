@@ -26,14 +26,12 @@ void main() {
     expect({skill1.id, skill2.id, skill3.id}.length, 3);
   });
 
-  test(
-      'createSkill allows multiple skills to have the same name',
-      () async {
+  test('createSkill allows multiple skills to have the same name', () async {
     final repository = InMemorySkillRepository();
     final skill1 = await repository.createSkill('Piano');
     final skill2 = await repository.createSkill('Piano');
     final skills = await repository.readSkills();
-    expect(skills, [skill1, skill2]);
+    expect(skills, [skill2, skill1]);
   });
 
   test('readSkills returns skills in order', () async {
@@ -42,25 +40,25 @@ void main() {
     final skill2 = await repository.createSkill('Cooking');
     final skill3 = await repository.createSkill('Running');
     final skills = await repository.readSkills();
-    expect(skills, [skill1, skill2, skill3]);
+    expect(skills, [skill3, skill2, skill1]);
   });
 
   test('readSkills returns skills up to limit', () async {
     final repository = InMemorySkillRepository();
-    final skill1 = await repository.createSkill('Piano');
+    final _ = await repository.createSkill('Piano');
     final skill2 = await repository.createSkill('Cooking');
-    final _ = await repository.createSkill('Running');
+    final skill3 = await repository.createSkill('Running');
     final skills = await repository.readSkills(limit: 2);
-    expect(skills, [skill1, skill2]);
+    expect(skills, [skill3, skill2]);
   });
 
   test('readSkills returns skills with skip', () async {
     final repository = InMemorySkillRepository();
-    final _ = await repository.createSkill('Piano');
+    final skill1 = await repository.createSkill('Piano');
     final skill2 = await repository.createSkill('Cooking');
-    final skill3 = await repository.createSkill('Running');
+    final _ = await repository.createSkill('Running');
     final skills = await repository.readSkills(skip: 1);
-    expect(skills, [skill2, skill3]);
+    expect(skills, [skill2, skill1]);
   });
 
   test('readSkills returns skills with skip and limit', () async {
@@ -79,15 +77,15 @@ void main() {
     final skill3 = await repository.createSkill('Running');
     await repository.deleteSkill(skill2.id);
     final skills = await repository.readSkills();
-    expect(skills, [skill1, skill3]);
+    expect(skills, [skill3, skill1]);
   });
 
   test('deleteSkill throws an error if the skill does not exist', () async {
     final repository = InMemorySkillRepository();
     final skill = await repository.createSkill('Piano');
     await repository.deleteSkill(skill.id);
-    expect(
-        () async => await repository.deleteSkill(skill.id), throwsArgumentError);
+    expect(() async => await repository.deleteSkill(skill.id),
+        throwsArgumentError);
   });
 
   test('Initializing the repository with a delay causes delayed operations',

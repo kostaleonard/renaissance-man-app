@@ -35,6 +35,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
         appBar: AppBar(title: const Text('Renaissance Man')),
         body: Column(
           children: [
+            //TODO button?
             FutureBuilder(
               future: skillQuery,
               builder: (context, snapshot) {
