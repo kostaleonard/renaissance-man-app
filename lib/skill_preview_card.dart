@@ -21,6 +21,7 @@ class SkillPreviewCard extends StatelessWidget {
               Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
           highlightColor: Colors.transparent,
           child: Text(skill.name),
+          //TODO also display number of hours
         ),
     );
   }

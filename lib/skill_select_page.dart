@@ -37,15 +37,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
         appBar: AppBar(title: const Text('Renaissance Man')),
         body: Column(
           children: [
-            CupertinoButton.filled(
-                onPressed: () {
-                  setState(() {
-                    widget.skillRepository.createSkill(
-                        'New skill'); //TODO user should choose name
-                    skillQuery = widget.skillRepository.readSkills();
-                  });
-                },
-                child: const Icon(Icons.add)),
+
             FutureBuilder(
               future: skillQuery,
               builder: (context, snapshot) {
@@ -56,15 +48,26 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                       child: Text('No connection', style: _biggerFont));
                 } else {
                   final skillsToDisplay = snapshot.data ?? [];
+                  final skillPreviewCards = skillsToDisplay
+                      .map((skill) => SkillPreviewCard(skill: skill))
+                      .toList(growable: false);
+                  //TODO make this button more muted so that it doesn't stand out
+                  final addSkillButton = CupertinoButton.filled(
+                      onPressed: () {
+                        setState(() {
+                          widget.skillRepository.createSkill(
+                              'New skill'); //TODO user should choose name
+                          skillQuery = widget.skillRepository.readSkills();
+                        });
+                      },
+                      child: const Icon(Icons.add));
                   return Expanded(
                       child: GridView.extent(
-                        padding: const EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
                     mainAxisSpacing: 25,
                     crossAxisSpacing: 10,
                     maxCrossAxisExtent: 200,
-                    children: skillsToDisplay
-                        .map((skill) => SkillPreviewCard(skill: skill))
-                        .toList(growable: false),
+                    children: [addSkillButton as Widget] + skillPreviewCards,
                   ));
                 }
               },
