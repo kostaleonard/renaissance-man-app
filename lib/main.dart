@@ -10,7 +10,7 @@ void main() {
   //TODO remove delay--it's only for seeing how UI components render
   runApp(RenaissanceManApp(
       skillRepository:
-          InMemorySkillRepository(withDelay: const Duration(seconds: 2))));
+          InMemorySkillRepository(withDelay: Duration.zero)));
 }
 
 // TODO docstrings

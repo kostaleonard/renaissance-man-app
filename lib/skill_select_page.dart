@@ -37,9 +37,6 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
         appBar: AppBar(title: const Text('Renaissance Man')),
         body: Column(
           children: [
-            TextField(
-              // TODO see Populare
-            ),
             CupertinoButton.filled(
                 onPressed: () {
                   setState(() {
@@ -60,15 +57,15 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                 } else {
                   final skillsToDisplay = snapshot.data ?? [];
                   return Expanded(
-                      child: ListView.builder(
-                          itemCount: skillsToDisplay.length * 2,
-                          padding: const EdgeInsets.all(8),
-                          itemBuilder: (context, i) {
-                            if (i.isOdd) return const Divider();
-                            final index = i ~/ 2;
-                            return SkillPreviewCard(
-                                skill: skillsToDisplay[index]);
-                          }));
+                      child: GridView.extent(
+                        padding: const EdgeInsets.all(8),
+                    mainAxisSpacing: 25,
+                    crossAxisSpacing: 10,
+                    maxCrossAxisExtent: 200,
+                    children: skillsToDisplay
+                        .map((skill) => SkillPreviewCard(skill: skill))
+                        .toList(growable: false),
+                  ));
                 }
               },
             ),
