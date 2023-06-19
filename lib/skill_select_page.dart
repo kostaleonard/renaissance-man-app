@@ -79,6 +79,9 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                           onPressed: () {
                             setState(() {
                               _showCreateSkillWindow = !_showCreateSkillWindow;
+                              if (_showCreateSkillWindow){
+                                _textFieldFocusNode.requestFocus();
+                              }
                             });
                           },
                           child: const Icon(Icons.add));
