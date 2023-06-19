@@ -20,6 +20,9 @@ class SkillSelectPage extends StatefulWidget {
 
 class _SkillSelectPageState extends State<SkillSelectPage> {
   static const _biggerFont = TextStyle(fontSize: 18);
+  static const _gridViewPadding = 8.0;
+  static const _gridViewMainAxisSpacing = 25.0;
+  static const _gridViewCrossAxisSpacing = 10.0;
   static const _gridViewMaxCrossAxisExtent = 200.0;
   late Future<List<Skill>> skillQuery;
 
@@ -65,32 +68,31 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                       child: const Icon(Icons.add));
                   return Expanded(
                       child: LayoutBuilder(builder: (context, constraints) {
-                    //TODO update magic numbers to static constants
-                    //See Flutter's SliverGridDelegateWithMaxCrossAxisExtent for an explanation of this calculation.
+                    // See Flutter's SliverGridDelegateWithMaxCrossAxisExtent for an explanation of these calculations.
                     final numGridViewColumns = max(
                         1,
-                        ((constraints.biggest.width - 16) /
-                                (_gridViewMaxCrossAxisExtent + 10))
+                        ((constraints.biggest.width - 2 * _gridViewPadding) /
+                                (_gridViewMaxCrossAxisExtent + _gridViewCrossAxisSpacing))
                             .ceil());
                     final usableCrossAxisExtent = max(
                       0,
                       constraints.biggest.width -
-                          16 -
-                          10 * (numGridViewColumns - 1),
+                          2 * _gridViewPadding -
+                          _gridViewCrossAxisSpacing * (numGridViewColumns - 1),
                     );
                     final gridViewColumnSize =
                         usableCrossAxisExtent / numGridViewColumns;
                     return Stack(children: [
                       GridView.extent(
-                        padding: const EdgeInsets.all(8),
-                        mainAxisSpacing: 25,
-                        crossAxisSpacing: 10,
+                        padding: const EdgeInsets.all(_gridViewPadding),
+                        mainAxisSpacing: _gridViewMainAxisSpacing,
+                        crossAxisSpacing: _gridViewCrossAxisSpacing,
                         maxCrossAxisExtent: _gridViewMaxCrossAxisExtent,
                         children: <Widget>[addSkillButton] + skillPreviewCards,
                       ),
                       Positioned(
-                          top: 8,
-                          left: 8 + gridViewColumnSize,
+                          top: _gridViewPadding,
+                          left: _gridViewPadding + _gridViewCrossAxisSpacing + gridViewColumnSize,
                           child: Container(
                             width: 100,
                             height: 100,

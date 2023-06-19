@@ -12,17 +12,16 @@ class SkillPreviewCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () {
-            // TODO go to skill page
-          },
-          splashColor:
-              Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
-          highlightColor: Colors.transparent,
-          child: Text(skill.name),
-          //TODO also display number of hours
-        ),
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () {
+          // TODO go to skill page
+        },
+        splashColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
+        highlightColor: Colors.transparent,
+        child: Text(skill.name),
+        //TODO also display number of hours
+      ),
     );
   }
 }

@@ -4,7 +4,7 @@ class Skill {
   final int id;
   final String name;
   final DateTime createdAt;
-  int minutesInvested;
+  int minutesInvested; //TODO this should just be a collection of all the practice sessions and schedules, then the app will dynamically calculate time spent
 
   Skill({required this.id, required this.name, createdAt})
       : createdAt = createdAt ?? DateTime.now(),
