@@ -24,17 +24,29 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
   static const _gridViewMainAxisSpacing = 25.0;
   static const _gridViewCrossAxisSpacing = 10.0;
   static const _gridViewMaxCrossAxisExtent = 300.0;
+  late TextEditingController _textEditingController;
+  late FocusNode _textFieldFocusNode;
+  bool _showCreateSkillWindow = false;
   late Future<List<Skill>> skillQuery;
 
   @override
   void initState() {
     super.initState();
+    _textEditingController = TextEditingController(text: '');
+    _textFieldFocusNode = FocusNode();
     // TODO remove test data
     widget.skillRepository.createSkill('Piano');
     widget.skillRepository.createSkill('Russian');
     widget.skillRepository.createSkill('Cooking');
     widget.skillRepository.createSkill('Weight lifting');
     skillQuery = widget.skillRepository.readSkills();
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    _textFieldFocusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -60,12 +72,21 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                   final addSkillButton = CupertinoButton.filled(
                       onPressed: () {
                         setState(() {
-                          widget.skillRepository.createSkill(
-                              'New skill'); //TODO user should choose name
-                          skillQuery = widget.skillRepository.readSkills();
+                          _showCreateSkillWindow = !_showCreateSkillWindow;
                         });
                       },
                       child: const Icon(Icons.add));
+                  final skillGridView = GridView.extent(
+                    padding: const EdgeInsets.all(_gridViewPadding),
+                    mainAxisSpacing: _gridViewMainAxisSpacing,
+                    crossAxisSpacing: _gridViewCrossAxisSpacing,
+                    maxCrossAxisExtent: _gridViewMaxCrossAxisExtent,
+                    childAspectRatio: 1 / .4,
+                    children: <Widget>[addSkillButton] + skillPreviewCards,
+                  );
+                  if (!_showCreateSkillWindow) {
+                    return Expanded(child: skillGridView);
+                  }
                   return Expanded(
                       child: LayoutBuilder(builder: (context, constraints) {
                     // See Flutter's SliverGridDelegateWithMaxCrossAxisExtent for an explanation of these calculations.
@@ -84,13 +105,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                     final gridViewColumnSize =
                         usableCrossAxisExtent / numGridViewColumns;
                     return Stack(children: [
-                      GridView.extent(
-                        padding: const EdgeInsets.all(_gridViewPadding),
-                        mainAxisSpacing: _gridViewMainAxisSpacing,
-                        crossAxisSpacing: _gridViewCrossAxisSpacing,
-                        maxCrossAxisExtent: _gridViewMaxCrossAxisExtent,
-                        children: <Widget>[addSkillButton] + skillPreviewCards,
-                      ),
+                      skillGridView,
                       Positioned(
                           top: _gridViewPadding,
                           left: _gridViewPadding +
@@ -107,19 +122,44 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                                       child: Padding(
                                           padding: const EdgeInsets.all(2.0),
                                           child: TextField(
+                                            controller: _textEditingController,
+                                            focusNode: _textFieldFocusNode,
                                             decoration: const InputDecoration(
                                                 border: OutlineInputBorder(),
                                                 labelText: 'Skill name'),
                                             onSubmitted: (text) {
-                                              //TODO create skill
+                                              if (text.trim().isNotEmpty) {
+                                                submitCreateSkillTextField(
+                                                    text);
+                                                _textEditingController.clear();
+                                                setState(() {
+                                                  _showCreateSkillWindow =
+                                                      false;
+                                                });
+                                              } else {
+                                                _textFieldFocusNode
+                                                    .requestFocus();
+                                              }
                                             },
                                           ))),
                                   Padding(
                                       padding: const EdgeInsets.only(left: 8.0),
-                                      child: FloatingActionButton( //TODO can we make this button square and more muted?
+                                      child: FloatingActionButton(
+                                        //TODO can we make this button square and more muted?
                                         child: const Icon(Icons.send),
                                         onPressed: () {
-                                          //TODO create skill, same as TextField
+                                          if (_textEditingController.text
+                                              .trim()
+                                              .isNotEmpty) {
+                                            submitCreateSkillTextField(
+                                                _textEditingController.text);
+                                            _textEditingController.clear();
+                                            setState(() {
+                                              _showCreateSkillWindow = false;
+                                            });
+                                          } else {
+                                            _textFieldFocusNode.requestFocus();
+                                          }
                                         },
                                       ))
                                 ])
@@ -131,5 +171,13 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
             ),
           ],
         ));
+  }
+
+  void submitCreateSkillTextField(String text) {
+    final trimmedText = text.trim();
+    if (trimmedText.isEmpty) return;
+    widget.skillRepository.createSkill(trimmedText).then((_) => setState(() {
+          skillQuery = widget.skillRepository.readSkills();
+        }));
   }
 }
