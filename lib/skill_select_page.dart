@@ -23,7 +23,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
   static const _gridViewPadding = 8.0;
   static const _gridViewMainAxisSpacing = 25.0;
   static const _gridViewCrossAxisSpacing = 10.0;
-  static const _gridViewMaxCrossAxisExtent = 200.0;
+  static const _gridViewMaxCrossAxisExtent = 300.0;
   late Future<List<Skill>> skillQuery;
 
   @override
@@ -72,7 +72,8 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                     final numGridViewColumns = max(
                         1,
                         ((constraints.biggest.width - 2 * _gridViewPadding) /
-                                (_gridViewMaxCrossAxisExtent + _gridViewCrossAxisSpacing))
+                                (_gridViewMaxCrossAxisExtent +
+                                    _gridViewCrossAxisSpacing))
                             .ceil());
                     final usableCrossAxisExtent = max(
                       0,
@@ -92,13 +93,37 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                       ),
                       Positioned(
                           top: _gridViewPadding,
-                          left: _gridViewPadding + _gridViewCrossAxisSpacing + gridViewColumnSize,
+                          left: _gridViewPadding +
+                              _gridViewCrossAxisSpacing +
+                              gridViewColumnSize,
                           child: Container(
-                            width: 100,
-                            height: 100,
-                            color: Colors.red,
-                            child: Text('$numGridViewColumns'),
-                          ))
+                              width: 300,
+                              color: Colors.grey,
+                              child: Column(children: [
+                                const Text('Create new skill'),
+                                const Divider(),
+                                Row(children: [
+                                  Expanded(
+                                      child: Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child: TextField(
+                                            decoration: const InputDecoration(
+                                                border: OutlineInputBorder(),
+                                                labelText: 'Skill name'),
+                                            onSubmitted: (text) {
+                                              //TODO create skill
+                                            },
+                                          ))),
+                                  Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: FloatingActionButton( //TODO can we make this button square and more muted?
+                                        child: const Icon(Icons.send),
+                                        onPressed: () {
+                                          //TODO create skill, same as TextField
+                                        },
+                                      ))
+                                ])
+                              ])))
                     ]);
                   }));
                 }
