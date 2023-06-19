@@ -51,142 +51,169 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(title: const Text('Renaissance Man')),
-        body: Column(
-          children: [
-            FutureBuilder(
-              future: skillQuery,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return const Center(
-                      child: Text('No connection', style: _biggerFont));
-                } else {
-                  final skillsToDisplay = snapshot.data ?? [];
-                  final skillPreviewCards = skillsToDisplay
-                      .map((skill) => SkillPreviewCard(skill: skill))
-                      .toList(growable: false);
-                  //TODO make this button more muted so that it doesn't stand out
-                  final addSkillButton = CupertinoButton.filled(
-                      onPressed: () {
-                        setState(() {
-                          _showCreateSkillWindow = !_showCreateSkillWindow;
-                        });
-                      },
-                      child: const Icon(Icons.add));
-                  final skillGridView = GridView.extent(
-                    padding: const EdgeInsets.all(_gridViewPadding),
-                    mainAxisSpacing: _gridViewMainAxisSpacing,
-                    crossAxisSpacing: _gridViewCrossAxisSpacing,
-                    maxCrossAxisExtent: _gridViewMaxCrossAxisExtent,
-                    childAspectRatio: 1 / .4,
-                    children: <Widget>[addSkillButton] + skillPreviewCards,
-                  );
-                  if (!_showCreateSkillWindow) {
-                    return Expanded(child: skillGridView);
-                  }
-                  return Expanded(
-                      child: LayoutBuilder(builder: (context, constraints) {
-                    // See Flutter's SliverGridDelegateWithMaxCrossAxisExtent for an explanation of these calculations.
-                    final numGridViewColumns = max(
-                        1,
-                        ((constraints.biggest.width - 2 * _gridViewPadding) /
-                                (_gridViewMaxCrossAxisExtent +
-                                    _gridViewCrossAxisSpacing))
-                            .ceil());
-                    final usableCrossAxisExtent = max(
-                      0,
-                      constraints.biggest.width -
-                          2 * _gridViewPadding -
-                          _gridViewCrossAxisSpacing * (numGridViewColumns - 1),
-                    );
-                    final gridViewColumnSize =
-                        usableCrossAxisExtent / numGridViewColumns;
-                    return Stack(children: [
-                      skillGridView,
-                      Positioned(
-                          top: _gridViewPadding,
-                          left: _gridViewPadding +
-                              _gridViewCrossAxisSpacing +
-                              gridViewColumnSize,
-                          child: Container(
-                              width: 300,
-                              color: Colors.grey,
-                              child: Column(children: [
-                                Row(children: [
-                                  const Expanded(
-                                      child: Text(
-                                    'Create new skill',
-                                    textAlign: TextAlign.center,
-                                  )),
-                                  IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        _showCreateSkillWindow = false;
-                                      });
-                                    },
-                                    icon: const Icon(Icons.cancel),
-                                  )
-                                ]),
-                                const Divider(),
-                                Row(children: [
-                                  Expanded(
-                                      child: Padding(
-                                          padding: const EdgeInsets.all(2.0),
-                                          child: TextField(
-                                            controller: _textEditingController,
-                                            focusNode: _textFieldFocusNode,
-                                            decoration: const InputDecoration(
-                                                border: OutlineInputBorder(),
-                                                labelText: 'Skill name'),
-                                            onSubmitted: (text) {
-                                              if (text.trim().isNotEmpty) {
-                                                submitCreateSkillTextField(
-                                                    text);
-                                                _textEditingController.clear();
-                                                setState(() {
-                                                  _showCreateSkillWindow =
-                                                      false;
-                                                });
-                                              } else {
-                                                _textFieldFocusNode
-                                                    .requestFocus();
-                                              }
+    return GestureDetector(
+        onTap: () {
+          setState(() {
+            _showCreateSkillWindow = false;
+          });
+        },
+        child: Scaffold(
+            appBar: AppBar(title: const Text('Renaissance Man')),
+            body: Column(
+              children: [
+                FutureBuilder(
+                  future: skillQuery,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return const Center(
+                          child: Text('No connection', style: _biggerFont));
+                    } else {
+                      final skillsToDisplay = snapshot.data ?? [];
+                      final skillPreviewCards = skillsToDisplay
+                          .map((skill) => SkillPreviewCard(skill: skill))
+                          .toList(growable: false);
+                      //TODO make this button more muted so that it doesn't stand out
+                      final addSkillButton = CupertinoButton.filled(
+                          onPressed: () {
+                            setState(() {
+                              _showCreateSkillWindow = !_showCreateSkillWindow;
+                            });
+                          },
+                          child: const Icon(Icons.add));
+                      final skillGridView = GridView.extent(
+                        padding: const EdgeInsets.all(_gridViewPadding),
+                        mainAxisSpacing: _gridViewMainAxisSpacing,
+                        crossAxisSpacing: _gridViewCrossAxisSpacing,
+                        maxCrossAxisExtent: _gridViewMaxCrossAxisExtent,
+                        childAspectRatio: 1 / .4,
+                        children: <Widget>[addSkillButton] + skillPreviewCards,
+                      );
+                      if (!_showCreateSkillWindow) {
+                        return Expanded(child: skillGridView);
+                      }
+                      return Expanded(
+                          child: LayoutBuilder(builder: (context, constraints) {
+                        // See Flutter's SliverGridDelegateWithMaxCrossAxisExtent for an explanation of these calculations.
+                        final numGridViewColumns = max(
+                            1,
+                            ((constraints.biggest.width -
+                                        2 * _gridViewPadding) /
+                                    (_gridViewMaxCrossAxisExtent +
+                                        _gridViewCrossAxisSpacing))
+                                .ceil());
+                        final usableCrossAxisExtent = max(
+                          0,
+                          constraints.biggest.width -
+                              2 * _gridViewPadding -
+                              _gridViewCrossAxisSpacing *
+                                  (numGridViewColumns - 1),
+                        );
+                        final gridViewColumnSize =
+                            usableCrossAxisExtent / numGridViewColumns;
+                        return Stack(children: [
+                          skillGridView,
+                          Positioned(
+                              top: _gridViewPadding,
+                              left: _gridViewPadding +
+                                  _gridViewCrossAxisSpacing +
+                                  gridViewColumnSize,
+                              child: GestureDetector(
+                                  onTap: () {
+                                    // This onTap call prevents clicks on the skill creation window from closing it.
+                                  },
+                                  child: Container(
+                                      width: 300,
+                                      color: Colors.grey,
+                                      child: Column(children: [
+                                        Row(children: [
+                                          const Expanded(
+                                              child: Text(
+                                            'Create new skill',
+                                            textAlign: TextAlign.center,
+                                          )),
+                                          IconButton(
+                                            onPressed: () {
+                                              setState(() {
+                                                _showCreateSkillWindow = false;
+                                              });
                                             },
-                                          ))),
-                                  Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: FloatingActionButton(
-                                        //TODO can we make this button square and more muted?
-                                        child: const Icon(
-                                          Icons.send,
-                                        ),
-                                        onPressed: () {
-                                          if (_textEditingController.text
-                                              .trim()
-                                              .isNotEmpty) {
-                                            submitCreateSkillTextField(
-                                                _textEditingController.text);
-                                            _textEditingController.clear();
-                                            setState(() {
-                                              _showCreateSkillWindow = false;
-                                            });
-                                          } else {
-                                            _textFieldFocusNode.requestFocus();
-                                          }
-                                        },
-                                      ))
-                                ])
-                              ])))
-                    ]);
-                  }));
-                }
-              },
-            ),
-          ],
-        ));
+                                            icon: const Icon(Icons.cancel),
+                                          )
+                                        ]),
+                                        const Divider(),
+                                        Row(children: [
+                                          Expanded(
+                                              child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(2.0),
+                                                  child: TextField(
+                                                    controller:
+                                                        _textEditingController,
+                                                    focusNode:
+                                                        _textFieldFocusNode,
+                                                    decoration:
+                                                        const InputDecoration(
+                                                            border:
+                                                                OutlineInputBorder(),
+                                                            labelText:
+                                                                'Skill name'),
+                                                    onSubmitted: (text) {
+                                                      if (text
+                                                          .trim()
+                                                          .isNotEmpty) {
+                                                        submitCreateSkillTextField(
+                                                            text);
+                                                        _textEditingController
+                                                            .clear();
+                                                        setState(() {
+                                                          _showCreateSkillWindow =
+                                                              false;
+                                                        });
+                                                      } else {
+                                                        _textFieldFocusNode
+                                                            .requestFocus();
+                                                      }
+                                                    },
+                                                  ))),
+                                          Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 8.0),
+                                              child: FloatingActionButton(
+                                                //TODO can we make this button square and more muted?
+                                                child: const Icon(
+                                                  Icons.send,
+                                                ),
+                                                onPressed: () {
+                                                  if (_textEditingController
+                                                      .text
+                                                      .trim()
+                                                      .isNotEmpty) {
+                                                    submitCreateSkillTextField(
+                                                        _textEditingController
+                                                            .text);
+                                                    _textEditingController
+                                                        .clear();
+                                                    setState(() {
+                                                      _showCreateSkillWindow =
+                                                          false;
+                                                    });
+                                                  } else {
+                                                    _textFieldFocusNode
+                                                        .requestFocus();
+                                                  }
+                                                },
+                                              ))
+                                        ])
+                                      ]))))
+                        ]);
+                      }));
+                    }
+                  },
+                ),
+              ],
+            )));
   }
 
   void submitCreateSkillTextField(String text) {
