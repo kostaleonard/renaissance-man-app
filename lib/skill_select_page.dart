@@ -34,11 +34,6 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
     super.initState();
     _textEditingController = TextEditingController(text: '');
     _textFieldFocusNode = FocusNode();
-    // TODO remove test data
-    widget.skillRepository.createSkill('Piano');
-    widget.skillRepository.createSkill('Russian');
-    widget.skillRepository.createSkill('Cooking');
-    widget.skillRepository.createSkill('Weight lifting');
     skillQuery = widget.skillRepository.readSkills();
   }
 
@@ -79,7 +74,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                           onPressed: () {
                             setState(() {
                               _showCreateSkillWindow = !_showCreateSkillWindow;
-                              if (_showCreateSkillWindow){
+                              if (_showCreateSkillWindow) {
                                 _textFieldFocusNode.requestFocus();
                               }
                             });
