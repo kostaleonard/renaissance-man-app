@@ -63,9 +63,9 @@ void main() {
 
   test('readSkills returns skills with skip and limit', () async {
     final repository = InMemorySkillRepository();
-    final _ = await repository.createSkill('Piano');
+    var _ = await repository.createSkill('Piano');
     final skill2 = await repository.createSkill('Cooking');
-    final __ = await repository.createSkill('Running');
+    _ = await repository.createSkill('Running');
     final skills = await repository.readSkills(limit: 1, skip: 1);
     expect(skills, [skill2]);
   });
