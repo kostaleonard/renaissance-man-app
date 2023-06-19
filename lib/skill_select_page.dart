@@ -115,7 +115,21 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                               width: 300,
                               color: Colors.grey,
                               child: Column(children: [
-                                const Text('Create new skill'),
+                                Row(children: [
+                                  const Expanded(
+                                      child: Text(
+                                    'Create new skill',
+                                    textAlign: TextAlign.center,
+                                  )),
+                                  IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        _showCreateSkillWindow = false;
+                                      });
+                                    },
+                                    icon: const Icon(Icons.cancel),
+                                  )
+                                ]),
                                 const Divider(),
                                 Row(children: [
                                   Expanded(
@@ -146,7 +160,9 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                                       padding: const EdgeInsets.only(left: 8.0),
                                       child: FloatingActionButton(
                                         //TODO can we make this button square and more muted?
-                                        child: const Icon(Icons.send),
+                                        child: const Icon(
+                                          Icons.send,
+                                        ),
                                         onPressed: () {
                                           if (_textEditingController.text
                                               .trim()
