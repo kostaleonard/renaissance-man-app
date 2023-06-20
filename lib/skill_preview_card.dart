@@ -3,6 +3,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:renaissance_man/skill.dart';
+import 'package:renaissance_man/skill_page.dart';
 
 class SkillPreviewCard extends StatelessWidget {
   final Skill skill;
@@ -29,9 +30,7 @@ class SkillPreviewCard extends StatelessWidget {
         );
       },
       openBuilder: (context, closeContainer) {
-        //TODO return a new skill page
-        return Scaffold(
-            appBar: AppBar(title: Text(skill.name)), body: const Column());
+        return SkillPage(skill: skill);
       },
     );
   }
