@@ -3,6 +3,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:renaissance_man/in_memory_repository.dart';
 import 'package:renaissance_man/skill.dart';
+import 'package:renaissance_man/weekly_practice_schedule.dart';
 
 void main() {
   test('Repository starts with no skills', () async {
@@ -204,6 +205,94 @@ void main() {
     expect(
         () async => await repository
             .readWeeklyPracticeSchedule(weeklyPracticeSchedule.id + 1),
+        throwsArgumentError);
+  });
+
+  test('updateWeeklyPracticeSchedule returns updated schedule', () async {
+    final repository = InMemoryRepository();
+    final weeklyPracticeSchedule =
+        await repository.createWeeklyPracticeSchedule(
+            startRecurrence: DateTime(2023, 1, 1),
+            practiceDuration: const Duration(hours: 1),
+            practiceSessionsPerWeek: 5);
+    final weeklyPracticeScheduleUpdate = WeeklyPracticeSchedule(
+        id: weeklyPracticeSchedule.id,
+        startRecurrence: weeklyPracticeSchedule.startRecurrence,
+        practiceDuration: const Duration(hours: 2),
+        practiceSessionsPerWeek:
+            weeklyPracticeSchedule.practiceSessionsPerWeek);
+    final returnValue = await repository
+        .updateWeeklyPracticeSchedule(weeklyPracticeScheduleUpdate);
+    expect(returnValue, weeklyPracticeScheduleUpdate);
+  });
+
+  test('updateWeeklyPracticeSchedule changes schedule data', () async {
+    final repository = InMemoryRepository();
+    final weeklyPracticeSchedule =
+        await repository.createWeeklyPracticeSchedule(
+            startRecurrence: DateTime(2023, 1, 1),
+            practiceDuration: const Duration(hours: 1),
+            practiceSessionsPerWeek: 5);
+    final weeklyPracticeScheduleUpdate = WeeklyPracticeSchedule(
+        id: weeklyPracticeSchedule.id,
+        startRecurrence: weeklyPracticeSchedule.startRecurrence,
+        practiceDuration: const Duration(hours: 2),
+        practiceSessionsPerWeek:
+            weeklyPracticeSchedule.practiceSessionsPerWeek);
+    await repository.updateWeeklyPracticeSchedule(weeklyPracticeScheduleUpdate);
+    final weeklyPracticeScheduleFromStorage =
+        await repository.readWeeklyPracticeSchedule(weeklyPracticeSchedule.id);
+    expect(weeklyPracticeScheduleFromStorage.practiceDuration,
+        weeklyPracticeScheduleUpdate.practiceDuration);
+  });
+
+  test(
+      'updateWeeklyPracticeSchedule throws an error if the schedule does not exist',
+      () async {
+    final repository = InMemoryRepository();
+    final weeklyPracticeSchedule =
+        await repository.createWeeklyPracticeSchedule(
+            startRecurrence: DateTime(2023, 1, 1),
+            practiceDuration: const Duration(hours: 1),
+            practiceSessionsPerWeek: 5);
+    final weeklyPracticeScheduleUpdate = WeeklyPracticeSchedule(
+        id: weeklyPracticeSchedule.id + 1,
+        startRecurrence: weeklyPracticeSchedule.startRecurrence,
+        practiceDuration: const Duration(hours: 2),
+        practiceSessionsPerWeek:
+            weeklyPracticeSchedule.practiceSessionsPerWeek);
+    expect(
+        () async => await repository
+            .updateWeeklyPracticeSchedule(weeklyPracticeScheduleUpdate),
+        throwsArgumentError);
+  });
+
+  test('deleteWeeklyPracticeSchedule removes schedule from repository',
+      () async {
+    final repository = InMemoryRepository();
+    final weeklyPracticeSchedule =
+        await repository.createWeeklyPracticeSchedule(
+            startRecurrence: DateTime(2023, 1, 1),
+            practiceDuration: const Duration(hours: 1),
+            practiceSessionsPerWeek: 5);
+    await repository.deleteWeeklyPracticeSchedule(weeklyPracticeSchedule.id);
+    expect(
+        () async => await repository
+            .readWeeklyPracticeSchedule(weeklyPracticeSchedule.id),
+        throwsArgumentError);
+  });
+
+  test('deleteSkill throws an error if the skill does not exist', () async {
+    final repository = InMemoryRepository();
+    final weeklyPracticeSchedule =
+        await repository.createWeeklyPracticeSchedule(
+            startRecurrence: DateTime(2023, 1, 1),
+            practiceDuration: const Duration(hours: 1),
+            practiceSessionsPerWeek: 5);
+    await repository.deleteWeeklyPracticeSchedule(weeklyPracticeSchedule.id);
+    expect(
+        () async => await repository
+            .deleteWeeklyPracticeSchedule(weeklyPracticeSchedule.id),
         throwsArgumentError);
   });
 }

@@ -82,13 +82,19 @@ class InMemoryRepository extends Repository {
   @override
   Future<WeeklyPracticeSchedule> updateWeeklyPracticeSchedule(
       WeeklyPracticeSchedule weeklyPracticeSchedule) {
-    // TODO: implement updateWeeklyPracticeSchedule
-    throw UnimplementedError();
+    deleteWeeklyPracticeSchedule(weeklyPracticeSchedule.id);
+    _weeklyPracticeSchedules.add(weeklyPracticeSchedule);
+    return Future.delayed(withDelay, () => weeklyPracticeSchedule);
   }
 
   @override
   Future<void> deleteWeeklyPracticeSchedule(int id) {
-    // TODO: implement deleteWeeklyPracticeSchedule
-    throw UnimplementedError();
+    final lengthBeforeRemove = _weeklyPracticeSchedules.length;
+    _weeklyPracticeSchedules.removeWhere((schedule) => schedule.id == id);
+    if (_weeklyPracticeSchedules.length == lengthBeforeRemove) {
+      throw ArgumentError(
+          'The repository does not contain weekly practice schedule $id');
+    }
+    return Future.delayed(withDelay, () => null);
   }
 }

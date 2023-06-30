@@ -6,6 +6,7 @@ class WeeklyPracticeSchedule {
   final Duration practiceDuration;
   final int
       practiceSessionsPerWeek; //TODO originally we thought about allowing cron-like schedules, but this is probably better for the user experience
+  //TODO it would probably be a good idea to have a createdAt for record keeping purposes
 
   WeeklyPracticeSchedule(
       {required this.id,
