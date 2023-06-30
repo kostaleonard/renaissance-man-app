@@ -1,17 +1,17 @@
-/// Tests in_memory_skill_repository.dart.
+/// Tests in_memory_repository.dart.
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:renaissance_man/in_memory_skill_repository.dart';
+import 'package:renaissance_man/in_memory_repository.dart';
 
 void main() {
   test('Repository starts with no skills', () async {
-    final repository = InMemorySkillRepository();
+    final repository = InMemoryRepository();
     final skills = await repository.readSkills();
     expect(skills.isEmpty, true);
   });
 
   test('createSkill adds a skill to the repository', () async {
-    final repository = InMemorySkillRepository();
+    final repository = InMemoryRepository();
     final skill = await repository.createSkill('Piano');
     final skills = await repository.readSkills();
     expect(skills.length, 1);
@@ -19,7 +19,7 @@ void main() {
   });
 
   test('createSkill gives skill a unique ID', () async {
-    final repository = InMemorySkillRepository();
+    final repository = InMemoryRepository();
     final skill1 = await repository.createSkill('Piano');
     final skill2 = await repository.createSkill('Cooking');
     final skill3 = await repository.createSkill('Running');
@@ -27,7 +27,7 @@ void main() {
   });
 
   test('createSkill allows multiple skills to have the same name', () async {
-    final repository = InMemorySkillRepository();
+    final repository = InMemoryRepository();
     final skill1 = await repository.createSkill('Piano');
     final skill2 = await repository.createSkill('Piano');
     final skills = await repository.readSkills();
@@ -35,7 +35,7 @@ void main() {
   });
 
   test('readSkills returns skills in order', () async {
-    final repository = InMemorySkillRepository();
+    final repository = InMemoryRepository();
     final skill1 = await repository.createSkill('Piano');
     final skill2 = await repository.createSkill('Cooking');
     final skill3 = await repository.createSkill('Running');
@@ -44,7 +44,7 @@ void main() {
   });
 
   test('readSkills returns skills up to limit', () async {
-    final repository = InMemorySkillRepository();
+    final repository = InMemoryRepository();
     final _ = await repository.createSkill('Piano');
     final skill2 = await repository.createSkill('Cooking');
     final skill3 = await repository.createSkill('Running');
@@ -53,7 +53,7 @@ void main() {
   });
 
   test('readSkills returns skills with skip', () async {
-    final repository = InMemorySkillRepository();
+    final repository = InMemoryRepository();
     final skill1 = await repository.createSkill('Piano');
     final skill2 = await repository.createSkill('Cooking');
     final _ = await repository.createSkill('Running');
@@ -62,7 +62,7 @@ void main() {
   });
 
   test('readSkills returns skills with skip and limit', () async {
-    final repository = InMemorySkillRepository();
+    final repository = InMemoryRepository();
     var _ = await repository.createSkill('Piano');
     final skill2 = await repository.createSkill('Cooking');
     _ = await repository.createSkill('Running');
@@ -71,7 +71,7 @@ void main() {
   });
 
   test('deleteSkill removes skill from repository', () async {
-    final repository = InMemorySkillRepository();
+    final repository = InMemoryRepository();
     final skill1 = await repository.createSkill('Piano');
     final skill2 = await repository.createSkill('Cooking');
     final skill3 = await repository.createSkill('Running');
@@ -81,7 +81,7 @@ void main() {
   });
 
   test('deleteSkill throws an error if the skill does not exist', () async {
-    final repository = InMemorySkillRepository();
+    final repository = InMemoryRepository();
     final skill = await repository.createSkill('Piano');
     await repository.deleteSkill(skill.id);
     expect(() async => await repository.deleteSkill(skill.id),
@@ -91,7 +91,7 @@ void main() {
   test('Initializing the repository with a delay causes delayed operations',
       () async {
     final repository =
-        InMemorySkillRepository(withDelay: const Duration(milliseconds: 100));
+        InMemoryRepository(withDelay: const Duration(milliseconds: 100));
     DateTime start = DateTime.now();
     final _ = await repository.createSkill('Piano');
     DateTime end = DateTime.now();

@@ -1,14 +1,14 @@
 //TODO docstrings
 
 import 'package:renaissance_man/skill.dart';
-import 'package:renaissance_man/skill_repository.dart';
+import 'package:renaissance_man/repository.dart';
 
-class InMemorySkillRepository extends SkillRepository {
+class InMemoryRepository extends Repository {
   final _skills = <Skill>[]; // TODO would like data structure with O(1) prepend
   var _nextAvailableId = 0;
   final Duration withDelay;
 
-  InMemorySkillRepository({this.withDelay = Duration.zero});
+  InMemoryRepository({this.withDelay = Duration.zero});
 
   @override
   Future<Skill> createSkill(String name) {

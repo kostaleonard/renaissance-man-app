@@ -1,8 +1,8 @@
-/// Provides an interface with storage media for skill data.
+/// Provides an interface with storage media for app data.
 
 import 'package:renaissance_man/skill.dart';
 
-/// Implements create, read, update, and delete methods for tracked skills.
+/// Implements create, read, update, and delete methods for app data.
 ///
 /// This class does not enforce the use of any particular storage medium.
 /// Subclasses need to make this decision. Some choices of storage media include
@@ -11,7 +11,7 @@ import 'package:renaissance_man/skill.dart';
 /// choice of storage medium: for databases, SQL queries (or HTTP requests on a
 /// proxy); for disk, file I/O; for in-memory, changing entries in a data
 /// structure.
-abstract class SkillRepository {
+abstract class Repository {
   /// Creates a [Skill] in backend storage and returns it on success.
   ///
   /// Creates a [Skill] with name [name] in backend storage. Multiple [Skill]s
