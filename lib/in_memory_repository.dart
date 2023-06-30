@@ -7,6 +7,8 @@ import 'package:renaissance_man/weekly_practice_schedule.dart';
 class InMemoryRepository extends Repository {
   final _skills = <Skill>[]; // TODO would like data structure with O(1) prepend
   var _nextAvailableSkillId = 0;
+  final _weeklyPracticeSchedules = <WeeklyPracticeSchedule>{};
+  var _nextAvailableWeeklyPracticeId = 0;
   final Duration withDelay;
 
   InMemoryRepository({this.withDelay = Duration.zero});
@@ -31,8 +33,13 @@ class InMemoryRepository extends Repository {
 
   @override
   Future<Skill> updateSkill(Skill skill) {
-    // TODO not sure what update needs to look like yet
-    throw UnimplementedError();
+    final index = _skills.indexOf(skill);
+    if (index == -1) {
+      throw ArgumentError('The repository does not contain skill ${skill.id}');
+    }
+    _skills.removeAt(index);
+    _skills.insert(index, skill);
+    return Future.delayed(withDelay, () => skill);
   }
 
   @override
@@ -68,7 +75,8 @@ class InMemoryRepository extends Repository {
   }
 
   @override
-  Future<WeeklyPracticeSchedule> updateWeeklyPracticeSchedule(WeeklyPracticeSchedule weeklyPracticeSchedule) {
+  Future<WeeklyPracticeSchedule> updateWeeklyPracticeSchedule(
+      WeeklyPracticeSchedule weeklyPracticeSchedule) {
     // TODO: implement updateWeeklyPracticeSchedule
     throw UnimplementedError();
   }

@@ -14,6 +14,12 @@ class WeeklyPracticeSchedule {
       required this.practiceDuration,
       required this.practiceSessionsPerWeek});
 
+  @override
+  bool operator ==(Object other) => other is WeeklyPracticeSchedule && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
+
   Duration getTimePracticedBetween(DateTime start, DateTime end) {
     final firstPracticeDateWithinWindow =
         start.isAfter(startRecurrence) ? start : startRecurrence;

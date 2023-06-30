@@ -87,4 +87,16 @@ void main() {
         DateTime(2023, 1, 1), DateTime(2023, 1, 8, 12));
     expect(timePracticed, const Duration(hours: 7, minutes: 30));
   });
+
+  test('WeeklyPracticeSchedule == operator compares IDs', () {
+    final weeklyPracticeSchedule1 = WeeklyPracticeSchedule(id: 1, startRecurrence: DateTime(2023, 1, 1), practiceDuration: Duration.zero, practiceSessionsPerWeek: 0);
+    final weeklyPracticeSchedule2 = WeeklyPracticeSchedule(id: 1, startRecurrence: DateTime(2023, 1, 1), practiceDuration: const Duration(hours: 1), practiceSessionsPerWeek: 5);
+    expect(weeklyPracticeSchedule1 == weeklyPracticeSchedule2, isTrue);
+  });
+
+  test('WeeklyPracticeSchedule hashCode is equal for schedules with equal IDs', () {
+    final weeklyPracticeSchedule1 = WeeklyPracticeSchedule(id: 1, startRecurrence: DateTime(2023, 1, 1), practiceDuration: Duration.zero, practiceSessionsPerWeek: 0);
+    final weeklyPracticeSchedule2 = WeeklyPracticeSchedule(id: 1, startRecurrence: DateTime(2023, 1, 1), practiceDuration: const Duration(hours: 1), practiceSessionsPerWeek: 5);
+    expect(weeklyPracticeSchedule1.hashCode, weeklyPracticeSchedule2.hashCode);
+  });
 }

@@ -89,6 +89,17 @@ void main() {
     expect(skills[0].createdAt, skillUpdate.createdAt);
   });
 
+  test('updateSkill does not reorder skills', () async {
+    final repository = InMemoryRepository();
+    final skill1 = await repository.createSkill('Piano');
+    final skill2 = await repository.createSkill('Cooking');
+    final skill3 = await repository.createSkill('Running');
+    final skillUpdate = Skill(id: skill2.id, name: 'Trombone');
+    await repository.updateSkill(skillUpdate);
+    final skills = await repository.readSkills();
+    expect(skills, [skill3, skillUpdate, skill1]);
+  });
+
   test('updateSkill throws an error if the skill does not exist', () async {
     final repository = InMemoryRepository();
     final skill = await repository.createSkill('Piano');
