@@ -15,9 +15,3 @@ class Skill {
     return name;
   }
 }
-
-class PracticePeriod {
-  final DateTime start;
-  final DateTime end;
-  final CronSche
-}
