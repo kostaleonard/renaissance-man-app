@@ -2,18 +2,19 @@
 
 import 'package:renaissance_man/skill.dart';
 import 'package:renaissance_man/repository.dart';
+import 'package:renaissance_man/weekly_practice_schedule.dart';
 
 class InMemoryRepository extends Repository {
   final _skills = <Skill>[]; // TODO would like data structure with O(1) prepend
-  var _nextAvailableId = 0;
+  var _nextAvailableSkillId = 0;
   final Duration withDelay;
 
   InMemoryRepository({this.withDelay = Duration.zero});
 
   @override
   Future<Skill> createSkill(String name) {
-    final skill = Skill(id: _nextAvailableId, name: name);
-    _nextAvailableId++;
+    final skill = Skill(id: _nextAvailableSkillId, name: name);
+    _nextAvailableSkillId++;
     _skills.insert(0, skill);
     return Future.delayed(withDelay, () => skill);
   }
@@ -29,7 +30,7 @@ class InMemoryRepository extends Repository {
   }
 
   @override
-  Future<Skill> updateSkill(int id) {
+  Future<Skill> updateSkill(Skill skill) {
     // TODO not sure what update needs to look like yet
     throw UnimplementedError();
   }
@@ -42,5 +43,33 @@ class InMemoryRepository extends Repository {
       throw ArgumentError('The repository does not contain skill $id');
     }
     return Future.delayed(withDelay, () => null);
+  }
+
+  @override
+  Future<WeeklyPracticeSchedule> createWeeklyPracticeSchedule(
+      {required DateTime startRecurrence,
+      DateTime? endRecurrence,
+      required Duration practiceDuration,
+      required int sessionsPerWeek}) {
+    // TODO: implement createWeeklyPracticeSchedule
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteWeeklyPracticeSchedule(int id) {
+    // TODO: implement deleteWeeklyPracticeSchedule
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<WeeklyPracticeSchedule> readWeeklyPracticeSchedule(int id) {
+    // TODO: implement readWeeklyPracticeSchedule
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<WeeklyPracticeSchedule> updateWeeklyPracticeSchedule(WeeklyPracticeSchedule weeklyPracticeSchedule) {
+    // TODO: implement updateWeeklyPracticeSchedule
+    throw UnimplementedError();
   }
 }

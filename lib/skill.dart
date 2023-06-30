@@ -4,9 +4,13 @@ class Skill {
   final int id;
   final String name;
   final DateTime createdAt;
-  final List<int> weeklyPracticeScheduleIds; //TODO should we keep the objects or the IDs from the database? Then load dynamically. Because the actual Skill object in the database will only have the IDs.
+  final List<int> weeklyPracticeScheduleIds;
 
-  Skill({required this.id, required this.name, createdAt, recurringWeeklyPractices})
+  Skill(
+      {required this.id,
+      required this.name,
+      createdAt,
+      recurringWeeklyPractices})
       : createdAt = createdAt ?? DateTime.now(),
         weeklyPracticeScheduleIds = recurringWeeklyPractices ?? [];
 
@@ -14,4 +18,10 @@ class Skill {
   String toString() {
     return name;
   }
+
+  @override
+  bool operator ==(Object other) => other is Skill && other.id == id;
+
+  @override
+  int get hashCode => id.hashCode;
 }

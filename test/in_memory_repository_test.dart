@@ -2,6 +2,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:renaissance_man/in_memory_repository.dart';
+import 'package:renaissance_man/skill.dart';
 
 void main() {
   test('Repository starts with no skills', () async {
@@ -68,6 +69,32 @@ void main() {
     _ = await repository.createSkill('Running');
     final skills = await repository.readSkills(limit: 1, skip: 1);
     expect(skills, [skill2]);
+  });
+
+  test('updateSkill returns updated skill', () async {
+    final repository = InMemoryRepository();
+    final skill = await repository.createSkill('Piano');
+    final skillUpdate = Skill(id: skill.id, name: skill.name, createdAt: DateTime(2023, 1, 1));
+    final returnValue = await repository.updateSkill(skillUpdate);
+    expect(returnValue, skillUpdate);
+  });
+  
+  test('updateSkill changes skill data', () async {
+    final repository = InMemoryRepository();
+    final skill = await repository.createSkill('Piano');
+    final skillUpdate = Skill(id: skill.id, name: skill.name, createdAt: DateTime(2023, 1, 1));
+    await repository.updateSkill(skillUpdate);
+    final skills = await repository.readSkills();
+    expect(skills.length, 1);
+    expect(skills[0].createdAt, skillUpdate.createdAt);
+  });
+
+  test('updateSkill throws an error if the skill does not exist', () async {
+    final repository = InMemoryRepository();
+    final skill = await repository.createSkill('Piano');
+    final skillUpdate = Skill(id: skill.id + 1, name: skill.name, createdAt: DateTime(2023, 1, 1));
+    expect(() async => await repository.updateSkill(skillUpdate),
+        throwsArgumentError);
   });
 
   test('deleteSkill removes skill from repository', () async {

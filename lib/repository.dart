@@ -1,6 +1,7 @@
 /// Provides an interface with storage media for app data.
 
 import 'package:renaissance_man/skill.dart';
+import 'package:renaissance_man/weekly_practice_schedule.dart';
 
 /// Implements create, read, update, and delete methods for app data.
 ///
@@ -27,12 +28,41 @@ abstract class Repository {
 
   /// Updates a [Skill] in backend storage and returns the new value on success.
   ///
-  /// If there is no [Skill] with ID [id], throws an [ArgumentError].
-  /// TODO what are the arguments for the new values? Get the current skill's JSON representation, update it, and create a new Skill from it?
-  Future<Skill> updateSkill(int id);
+  /// Updates in backend storage the [Skill] with ID [skill.id] to have all
+  /// the new information contained in [skill]. If there is no [Skill] with ID
+  /// [skill.id], throws an [ArgumentError].
+  Future<Skill> updateSkill(Skill skill);
 
   /// Deletes a [Skill] from backend storage.
   ///
   /// If there is no [Skill] with ID [id], throws an [ArgumentError].
   Future<void> deleteSkill(int id);
+
+  /// Creates a [WeeklyPracticeSchedule] in backend storage and returns it.
+  Future<WeeklyPracticeSchedule> createWeeklyPracticeSchedule(
+      {required DateTime startRecurrence,
+      DateTime? endRecurrence,
+      required Duration practiceDuration,
+      required int sessionsPerWeek});
+
+  /// Returns a [WeeklyPracticeSchedule] from backend storage.
+  ///
+  /// If there is no [WeeklyPracticeSchedule] with ID [id], throws an
+  /// [ArgumentError].
+  Future<WeeklyPracticeSchedule> readWeeklyPracticeSchedule(int id);
+
+  /// Updates a [WeeklyPracticeSchedule] in backend storage and returns it.
+  ///
+  /// Updates in backend storage the [WeeklyPracticeSchedule] with ID
+  /// [weeklyPracticeSchedule.id] to have all the new information contained in
+  /// [weeklyPracticeSchedule]. If there is no [WeeklyPracticeSchedule] with ID
+  /// [weeklyPracticeSchedule.id], throws an [ArgumentError].
+  Future<WeeklyPracticeSchedule> updateWeeklyPracticeSchedule(
+      WeeklyPracticeSchedule weeklyPracticeSchedule);
+
+  /// Deletes a [WeeklyPracticeSchedule] from backend storage.
+  ///
+  /// If there is no [WeeklyPracticeSchedule] with ID [id], throws an
+  /// [ArgumentError].
+  Future<void> deleteWeeklyPracticeSchedule(int id);
 }
