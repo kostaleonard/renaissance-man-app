@@ -43,7 +43,7 @@ abstract class Repository {
       {required DateTime startRecurrence,
       DateTime? endRecurrence,
       required Duration practiceDuration,
-      required int sessionsPerWeek});
+      required int practiceSessionsPerWeek});
 
   /// Returns a [WeeklyPracticeSchedule] from backend storage.
   ///

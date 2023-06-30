@@ -57,27 +57,38 @@ class InMemoryRepository extends Repository {
       {required DateTime startRecurrence,
       DateTime? endRecurrence,
       required Duration practiceDuration,
-      required int sessionsPerWeek}) {
-    // TODO: implement createWeeklyPracticeSchedule
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<void> deleteWeeklyPracticeSchedule(int id) {
-    // TODO: implement deleteWeeklyPracticeSchedule
-    throw UnimplementedError();
+      required int practiceSessionsPerWeek}) {
+    final weeklyPracticeSchedule = WeeklyPracticeSchedule(
+        id: _nextAvailableWeeklyPracticeId,
+        startRecurrence: startRecurrence,
+        endRecurrence: endRecurrence,
+        practiceDuration: practiceDuration,
+        practiceSessionsPerWeek: practiceSessionsPerWeek);
+    _nextAvailableWeeklyPracticeId++;
+    _weeklyPracticeSchedules.add(weeklyPracticeSchedule);
+    return Future.delayed(withDelay, () => weeklyPracticeSchedule);
   }
 
   @override
   Future<WeeklyPracticeSchedule> readWeeklyPracticeSchedule(int id) {
-    // TODO: implement readWeeklyPracticeSchedule
-    throw UnimplementedError();
+    final weeklyPracticeSchedule = _weeklyPracticeSchedules
+        .firstWhere((schedule) => schedule.id == id, orElse: () {
+      throw ArgumentError(
+          'The repository does not contain weekly practice schedule $id');
+    });
+    return Future.delayed(withDelay, () => weeklyPracticeSchedule);
   }
 
   @override
   Future<WeeklyPracticeSchedule> updateWeeklyPracticeSchedule(
       WeeklyPracticeSchedule weeklyPracticeSchedule) {
     // TODO: implement updateWeeklyPracticeSchedule
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteWeeklyPracticeSchedule(int id) {
+    // TODO: implement deleteWeeklyPracticeSchedule
     throw UnimplementedError();
   }
 }

@@ -74,15 +74,17 @@ void main() {
   test('updateSkill returns updated skill', () async {
     final repository = InMemoryRepository();
     final skill = await repository.createSkill('Piano');
-    final skillUpdate = Skill(id: skill.id, name: skill.name, createdAt: DateTime(2023, 1, 1));
+    final skillUpdate =
+        Skill(id: skill.id, name: skill.name, createdAt: DateTime(2023, 1, 1));
     final returnValue = await repository.updateSkill(skillUpdate);
     expect(returnValue, skillUpdate);
   });
-  
+
   test('updateSkill changes skill data', () async {
     final repository = InMemoryRepository();
     final skill = await repository.createSkill('Piano');
-    final skillUpdate = Skill(id: skill.id, name: skill.name, createdAt: DateTime(2023, 1, 1));
+    final skillUpdate =
+        Skill(id: skill.id, name: skill.name, createdAt: DateTime(2023, 1, 1));
     await repository.updateSkill(skillUpdate);
     final skills = await repository.readSkills();
     expect(skills.length, 1);
@@ -103,7 +105,8 @@ void main() {
   test('updateSkill throws an error if the skill does not exist', () async {
     final repository = InMemoryRepository();
     final skill = await repository.createSkill('Piano');
-    final skillUpdate = Skill(id: skill.id + 1, name: skill.name, createdAt: DateTime(2023, 1, 1));
+    final skillUpdate = Skill(
+        id: skill.id + 1, name: skill.name, createdAt: DateTime(2023, 1, 1));
     expect(() async => await repository.updateSkill(skillUpdate),
         throwsArgumentError);
   });
@@ -138,5 +141,69 @@ void main() {
     expect(
         end.difference(start).compareTo(minimumDifferenceWithErrorBuffer) > 0,
         isTrue);
+  });
+
+  test('createWeeklyPracticeSchedule adds a schedule to the repository',
+      () async {
+    final repository = InMemoryRepository();
+    final weeklyPracticeSchedule =
+        await repository.createWeeklyPracticeSchedule(
+            startRecurrence: DateTime(2023, 1, 1),
+            practiceDuration: const Duration(hours: 1),
+            practiceSessionsPerWeek: 5);
+    final weeklyPracticeScheduleFromStorage =
+        await repository.readWeeklyPracticeSchedule(weeklyPracticeSchedule.id);
+    expect(weeklyPracticeSchedule, weeklyPracticeScheduleFromStorage);
+  });
+
+  test('createWeeklyPracticeSchedule gives schedules unique IDs', () async {
+    final repository = InMemoryRepository();
+    final weeklyPracticeSchedule1 =
+        await repository.createWeeklyPracticeSchedule(
+            startRecurrence: DateTime(2023, 1, 1),
+            practiceDuration: const Duration(hours: 1),
+            practiceSessionsPerWeek: 5);
+    final weeklyPracticeSchedule2 =
+        await repository.createWeeklyPracticeSchedule(
+            startRecurrence: DateTime(2023, 2, 1),
+            practiceDuration: const Duration(hours: 2),
+            practiceSessionsPerWeek: 3);
+    expect({weeklyPracticeSchedule1.id, weeklyPracticeSchedule2.id}.length, 2);
+  });
+
+  test('readWeeklyPracticeSchedule returns schedule with corresponding ID',
+      () async {
+    final repository = InMemoryRepository();
+    final weeklyPracticeSchedule1 =
+        await repository.createWeeklyPracticeSchedule(
+            startRecurrence: DateTime(2023, 1, 1),
+            practiceDuration: const Duration(hours: 1),
+            practiceSessionsPerWeek: 5);
+    final weeklyPracticeSchedule2 =
+        await repository.createWeeklyPracticeSchedule(
+            startRecurrence: DateTime(2023, 2, 1),
+            practiceDuration: const Duration(hours: 2),
+            practiceSessionsPerWeek: 3);
+    final weeklyPracticeSchedule1FromStorage =
+        await repository.readWeeklyPracticeSchedule(weeklyPracticeSchedule1.id);
+    expect(weeklyPracticeSchedule1, weeklyPracticeSchedule1FromStorage);
+    final weeklyPracticeSchedule2FromStorage =
+        await repository.readWeeklyPracticeSchedule(weeklyPracticeSchedule2.id);
+    expect(weeklyPracticeSchedule2, weeklyPracticeSchedule2FromStorage);
+  });
+
+  test(
+      'readWeeklyPracticeSchedule throws an error if the schedule does not exist',
+      () async {
+    final repository = InMemoryRepository();
+    final weeklyPracticeSchedule =
+        await repository.createWeeklyPracticeSchedule(
+            startRecurrence: DateTime(2023, 1, 1),
+            practiceDuration: const Duration(hours: 1),
+            practiceSessionsPerWeek: 5);
+    expect(
+        () async => await repository
+            .readWeeklyPracticeSchedule(weeklyPracticeSchedule.id + 1),
+        throwsArgumentError);
   });
 }
