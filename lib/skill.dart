@@ -4,11 +4,11 @@ class Skill {
   final int id;
   final String name;
   final DateTime createdAt;
-  int minutesInvested; //TODO this should just be a collection of all the practice sessions and schedules, then the app will dynamically calculate time spent
+  final List<int> weeklyPracticeScheduleIds; //TODO should we keep the objects or the IDs from the database? Then load dynamically. Because the actual Skill object in the database will only have the IDs.
 
-  Skill({required this.id, required this.name, createdAt})
+  Skill({required this.id, required this.name, createdAt, recurringWeeklyPractices})
       : createdAt = createdAt ?? DateTime.now(),
-        minutesInvested = 0;
+        weeklyPracticeScheduleIds = recurringWeeklyPractices ?? [];
 
   @override
   String toString() {
