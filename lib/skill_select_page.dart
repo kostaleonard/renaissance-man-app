@@ -6,13 +6,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:renaissance_man/skill.dart';
 import 'package:renaissance_man/skill_preview_card.dart';
-import 'package:renaissance_man/skill_repository.dart';
+import 'package:renaissance_man/repository.dart';
 
 class SkillSelectPage extends StatefulWidget {
-  final SkillRepository skillRepository;
+  final Repository repository;
 
-  const SkillSelectPage({Key? key, required this.skillRepository})
-      : super(key: key);
+  const SkillSelectPage({Key? key, required this.repository}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SkillSelectPageState();
@@ -34,7 +33,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
     super.initState();
     _textEditingController = TextEditingController(text: '');
     _textFieldFocusNode = FocusNode();
-    skillQuery = widget.skillRepository.readSkills();
+    skillQuery = widget.repository.readSkills();
   }
 
   @override
@@ -67,7 +66,8 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                     } else {
                       final skillsToDisplay = snapshot.data ?? [];
                       final skillPreviewCards = skillsToDisplay
-                          .map((skill) => SkillPreviewCard(skill: skill))
+                          .map((skill) => SkillPreviewCard(
+                              repository: widget.repository, skill: skill))
                           .toList(growable: false);
                       //TODO make this button more muted so that it doesn't stand out
                       final addSkillButton = CupertinoButton.filled(
@@ -217,8 +217,8 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
   void submitCreateSkillTextField(String text) {
     final trimmedText = text.trim();
     if (trimmedText.isEmpty) return;
-    widget.skillRepository.createSkill(trimmedText).then((_) => setState(() {
-          skillQuery = widget.skillRepository.readSkills();
+    widget.repository.createSkill(trimmedText).then((_) => setState(() {
+          skillQuery = widget.repository.readSkills();
         }));
   }
 }
