@@ -16,7 +16,8 @@ class WeeklyPracticeSchedule {
       required this.practiceSessionsPerWeek});
 
   @override
-  bool operator ==(Object other) => other is WeeklyPracticeSchedule && other.id == id;
+  bool operator ==(Object other) =>
+      other is WeeklyPracticeSchedule && other.id == id;
 
   @override
   int get hashCode => id.hashCode;
@@ -38,5 +39,13 @@ class WeeklyPracticeSchedule {
         lastPracticeDateWithinWindow.difference(firstPracticeDateWithinWindow);
     final windowDurationWeeks = windowDuration.inMinutes / 60 / 24 / 7;
     return practiceDuration * practiceSessionsPerWeek * windowDurationWeeks;
+  }
+
+  static Duration getTimePracticedAcrossSchedulesBetween(
+      DateTime start, DateTime end, List<WeeklyPracticeSchedule> schedules) {
+    return schedules
+        .map((schedule) => schedule.getTimePracticedBetween(start, end))
+        .reduce((runningTotalDuration, nextDuration) =>
+            runningTotalDuration + nextDuration);
   }
 }

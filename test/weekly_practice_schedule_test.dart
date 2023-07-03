@@ -89,14 +89,101 @@ void main() {
   });
 
   test('WeeklyPracticeSchedule == operator compares IDs', () {
-    final weeklyPracticeSchedule1 = WeeklyPracticeSchedule(id: 1, startRecurrence: DateTime(2023, 1, 1), practiceDuration: Duration.zero, practiceSessionsPerWeek: 0);
-    final weeklyPracticeSchedule2 = WeeklyPracticeSchedule(id: 1, startRecurrence: DateTime(2023, 1, 1), practiceDuration: const Duration(hours: 1), practiceSessionsPerWeek: 5);
+    final weeklyPracticeSchedule1 = WeeklyPracticeSchedule(
+        id: 1,
+        startRecurrence: DateTime(2023, 1, 1),
+        practiceDuration: Duration.zero,
+        practiceSessionsPerWeek: 0);
+    final weeklyPracticeSchedule2 = WeeklyPracticeSchedule(
+        id: 1,
+        startRecurrence: DateTime(2023, 1, 1),
+        practiceDuration: const Duration(hours: 1),
+        practiceSessionsPerWeek: 5);
     expect(weeklyPracticeSchedule1 == weeklyPracticeSchedule2, isTrue);
   });
 
-  test('WeeklyPracticeSchedule hashCode is equal for schedules with equal IDs', () {
-    final weeklyPracticeSchedule1 = WeeklyPracticeSchedule(id: 1, startRecurrence: DateTime(2023, 1, 1), practiceDuration: Duration.zero, practiceSessionsPerWeek: 0);
-    final weeklyPracticeSchedule2 = WeeklyPracticeSchedule(id: 1, startRecurrence: DateTime(2023, 1, 1), practiceDuration: const Duration(hours: 1), practiceSessionsPerWeek: 5);
+  test('WeeklyPracticeSchedule hashCode is equal for schedules with equal IDs',
+      () {
+    final weeklyPracticeSchedule1 = WeeklyPracticeSchedule(
+        id: 1,
+        startRecurrence: DateTime(2023, 1, 1),
+        practiceDuration: Duration.zero,
+        practiceSessionsPerWeek: 0);
+    final weeklyPracticeSchedule2 = WeeklyPracticeSchedule(
+        id: 1,
+        startRecurrence: DateTime(2023, 1, 1),
+        practiceDuration: const Duration(hours: 1),
+        practiceSessionsPerWeek: 5);
     expect(weeklyPracticeSchedule1.hashCode, weeklyPracticeSchedule2.hashCode);
+  });
+
+  test(
+      'getTimePracticedAcrossSchedulesBetween returns the sum of practice time over all schedules, no schedule overlap',
+      () {
+    final schedule1 = WeeklyPracticeSchedule(
+        id: 1,
+        startRecurrence: DateTime(2023, 1, 1),
+        endRecurrence: DateTime(2023, 1, 4),
+        practiceDuration: const Duration(hours: 1),
+        practiceSessionsPerWeek: 7);
+    final schedule2 = WeeklyPracticeSchedule(
+        id: 2,
+        startRecurrence: DateTime(2023, 1, 4),
+        endRecurrence: DateTime(2023, 1, 8),
+        practiceDuration: const Duration(hours: 2),
+        practiceSessionsPerWeek: 7);
+    expect(
+        WeeklyPracticeSchedule.getTimePracticedAcrossSchedulesBetween(
+            DateTime(2023, 1, 1), DateTime(2023, 1, 8), [schedule1, schedule2]),
+        const Duration(hours: 11));
+  });
+
+  test(
+      'getTimePracticedAcrossSchedulesBetween returns the sum of practice time over all schedules, with schedule overlap',
+      () {
+    final schedule1 = WeeklyPracticeSchedule(
+        id: 1,
+        startRecurrence: DateTime(2023, 1, 1),
+        endRecurrence: DateTime(2023, 1, 6),
+        practiceDuration: const Duration(hours: 1),
+        practiceSessionsPerWeek: 7);
+    final schedule2 = WeeklyPracticeSchedule(
+        id: 2,
+        startRecurrence: DateTime(2023, 1, 3),
+        endRecurrence: DateTime(2023, 1, 8),
+        practiceDuration: const Duration(hours: 2),
+        practiceSessionsPerWeek: 7);
+    expect(
+        WeeklyPracticeSchedule.getTimePracticedAcrossSchedulesBetween(
+            DateTime(2023, 1, 1), DateTime(2023, 1, 8), [schedule1, schedule2]),
+        const Duration(hours: 15));
+  });
+
+  test(
+      'getTimePracticedAcrossSchedulesBetween returns the sum of practice time over all schedules, with gaps',
+      () {
+    final schedule1 = WeeklyPracticeSchedule(
+        id: 1,
+        startRecurrence: DateTime(2023, 1, 1),
+        endRecurrence: DateTime(2023, 1, 4),
+        practiceDuration: const Duration(hours: 1),
+        practiceSessionsPerWeek: 7);
+    final schedule2 = WeeklyPracticeSchedule(
+        id: 2,
+        startRecurrence: DateTime(2023, 1, 4),
+        endRecurrence: DateTime(2023, 1, 8),
+        practiceDuration: const Duration(hours: 2),
+        practiceSessionsPerWeek: 7);
+    final schedule3 = WeeklyPracticeSchedule(
+        id: 3,
+        startRecurrence: DateTime(2023, 1, 14),
+        practiceDuration: const Duration(hours: 1),
+        practiceSessionsPerWeek: 7);
+    expect(
+        WeeklyPracticeSchedule.getTimePracticedAcrossSchedulesBetween(
+            DateTime(2023, 1, 1),
+            DateTime(2023, 1, 15),
+            [schedule1, schedule2, schedule3]),
+        const Duration(hours: 12));
   });
 }

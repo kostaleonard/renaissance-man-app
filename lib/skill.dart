@@ -10,9 +10,9 @@ class Skill {
       {required this.id,
       required this.name,
       createdAt,
-      recurringWeeklyPractices})
+      weeklyPracticeScheduleIds})
       : createdAt = createdAt ?? DateTime.now(),
-        weeklyPracticeScheduleIds = recurringWeeklyPractices ?? [];
+        weeklyPracticeScheduleIds = weeklyPracticeScheduleIds ?? [];
 
   @override
   String toString() {
