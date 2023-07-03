@@ -11,8 +11,7 @@ import 'package:renaissance_man/repository.dart';
 class SkillSelectPage extends StatefulWidget {
   final Repository repository;
 
-  const SkillSelectPage({Key? key, required this.repository})
-      : super(key: key);
+  const SkillSelectPage({Key? key, required this.repository}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _SkillSelectPageState();
@@ -67,7 +66,8 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                     } else {
                       final skillsToDisplay = snapshot.data ?? [];
                       final skillPreviewCards = skillsToDisplay
-                          .map((skill) => SkillPreviewCard(repository: widget.repository, skill: skill))
+                          .map((skill) => SkillPreviewCard(
+                              repository: widget.repository, skill: skill))
                           .toList(growable: false);
                       //TODO make this button more muted so that it doesn't stand out
                       final addSkillButton = CupertinoButton.filled(

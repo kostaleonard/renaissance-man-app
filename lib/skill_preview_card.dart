@@ -12,7 +12,8 @@ class SkillPreviewCard extends StatelessWidget {
   final Skill skill;
   static const height = 298.0;
 
-  const SkillPreviewCard({super.key, required this.repository, required this.skill});
+  const SkillPreviewCard(
+      {super.key, required this.repository, required this.skill});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,10 @@ class SkillPreviewCard extends StatelessWidget {
         );
       },
       openBuilder: (context, closeContainer) {
-        return SkillPage(repository: repository, skillId: skill.id,);
+        return SkillPage(
+          repository: repository,
+          skillId: skill.id,
+        );
       },
     );
   }

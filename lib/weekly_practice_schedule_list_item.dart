@@ -8,21 +8,26 @@ class WeeklyPracticeScheduleListItem extends StatefulWidget {
   final Repository repository;
   final int weeklyPracticeScheduleId;
 
-  const WeeklyPracticeScheduleListItem({Key? key, required this.repository, required this.weeklyPracticeScheduleId})
+  const WeeklyPracticeScheduleListItem(
+      {Key? key,
+      required this.repository,
+      required this.weeklyPracticeScheduleId})
       : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _WeeklyPracticeScheduleListItemState();
 }
 
-class _WeeklyPracticeScheduleListItemState extends State<WeeklyPracticeScheduleListItem> {
+class _WeeklyPracticeScheduleListItemState
+    extends State<WeeklyPracticeScheduleListItem> {
   static const _biggerFont = TextStyle(fontSize: 18);
   late Future<WeeklyPracticeSchedule> readWeeklyPracticeScheduleQuery;
 
   @override
   void initState() {
     super.initState();
-    readWeeklyPracticeScheduleQuery = widget.repository.readWeeklyPracticeSchedule(widget.weeklyPracticeScheduleId);
+    readWeeklyPracticeScheduleQuery = widget.repository
+        .readWeeklyPracticeSchedule(widget.weeklyPracticeScheduleId);
   }
 
   @override
@@ -37,7 +42,13 @@ class _WeeklyPracticeScheduleListItemState extends State<WeeklyPracticeScheduleL
         } else {
           final schedule = snapshot.data!;
           //TODO better display for schedule
-          return ListTile(leading: const Icon(Icons.timer), title: Text(schedule.startRecurrence.toString(), style: _biggerFont,),);
+          return ListTile(
+            leading: const Icon(Icons.timer),
+            title: Text(
+              schedule.startRecurrence.toString(),
+              style: _biggerFont,
+            ),
+          );
         }
       },
     );
