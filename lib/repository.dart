@@ -19,6 +19,11 @@ abstract class Repository {
   /// may have the same name.
   Future<Skill> createSkill(String name);
 
+  /// Returns the [Skill] with ID [id] from backend storage.
+  ///
+  /// If there is no [Skill] with ID [id], throws an [ArgumentError].
+  Future<Skill> readSkill(int id);
+
   /// Returns a list of [Skill]s from backend storage.
   ///
   /// Returns the first [limit] or fewer [Skill]s from backend storage, skipping

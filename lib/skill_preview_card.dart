@@ -2,14 +2,17 @@
 
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:renaissance_man/repository.dart';
 import 'package:renaissance_man/skill.dart';
 import 'package:renaissance_man/skill_page.dart';
 
+//TODO change to based on skill ID, use future so that when a user closes the skill page after making changes, those changes reflect on the card here
 class SkillPreviewCard extends StatelessWidget {
+  final Repository repository;
   final Skill skill;
   static const height = 298.0;
 
-  const SkillPreviewCard({super.key, required this.skill});
+  const SkillPreviewCard({super.key, required this.repository, required this.skill});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +33,7 @@ class SkillPreviewCard extends StatelessWidget {
         );
       },
       openBuilder: (context, closeContainer) {
-        return SkillPage(skill: skill);
+        return SkillPage(repository: repository, skillId: skill.id,);
       },
     );
   }

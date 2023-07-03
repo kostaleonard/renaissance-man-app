@@ -22,6 +22,14 @@ class InMemoryRepository extends Repository {
   }
 
   @override
+  Future<Skill> readSkill(int id) {
+    final skill = _skills.firstWhere((skill) => skill.id == id, orElse: () {
+      throw ArgumentError('The repository does not contain skill $id');
+    });
+    return Future.delayed(withDelay, () => skill);
+  }
+
+  @override
   Future<List<Skill>> readSkills({int? limit, int skip = 0}) {
     final skillsAfterSkip = _skills.skip(skip);
     if (limit == null) {

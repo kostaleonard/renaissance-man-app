@@ -36,6 +36,22 @@ void main() {
     expect(skills, [skill2, skill1]);
   });
 
+  test('readSkill returns skill with matching ID', () async {
+    final repository = InMemoryRepository();
+    final skill1 = await repository.createSkill('Piano');
+    var _ = await repository.createSkill('Cooking');
+    _ = await repository.createSkill('Running');
+    final skill = await repository.readSkill(skill1.id);
+    expect(skill, skill1);
+  });
+
+  test('readSkill throws an error if the skill does not exist', () async {
+    final repository = InMemoryRepository();
+    final skill = await repository.createSkill('Piano');
+    expect(() async => await repository.readSkill(skill.id + 1),
+        throwsArgumentError);
+  });
+
   test('readSkills returns skills in order', () async {
     final repository = InMemoryRepository();
     final skill1 = await repository.createSkill('Piano');

@@ -67,7 +67,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                     } else {
                       final skillsToDisplay = snapshot.data ?? [];
                       final skillPreviewCards = skillsToDisplay
-                          .map((skill) => SkillPreviewCard(skill: skill))
+                          .map((skill) => SkillPreviewCard(repository: widget.repository, skill: skill))
                           .toList(growable: false);
                       //TODO make this button more muted so that it doesn't stand out
                       final addSkillButton = CupertinoButton.filled(
