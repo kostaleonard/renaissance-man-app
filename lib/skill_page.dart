@@ -19,11 +19,16 @@ class SkillPage extends StatefulWidget {
 class _SkillPageState extends State<SkillPage> {
   static const _biggerFont = TextStyle(fontSize: 18);
   late Future<Skill> readAndUpdateSkillQuery;
+  late DateTime newWeeklyPracticeScheduleStartDate;
+  DateTime? newWeeklyPracticeScheduleEndDate;
+  Duration newWeeklyPracticeScheduleDuration = const Duration(minutes: 30);
 
   @override
   void initState() {
     super.initState();
     readAndUpdateSkillQuery = widget.repository.readSkill(widget.skillId);
+    final now = DateTime.now();
+    newWeeklyPracticeScheduleStartDate = DateTime(now.year, now.month, now.day);
   }
 
   @override
@@ -39,6 +44,8 @@ class _SkillPageState extends State<SkillPage> {
           return const Center(child: Text('No connection', style: _biggerFont));
         } else {
           final skill = snapshot.data!;
+          //TODO always show header column
+          //TODO add column with empty header for X and check marks to remove and add schedules (add only for the last row). These buttons should be subdued.
           return Scaffold(
               appBar: AppBar(title: Text(skill.name)),
               body: SingleChildScrollView(
@@ -57,14 +64,79 @@ class _SkillPageState extends State<SkillPage> {
                   ],
                   //TODO replace rows with actual data
                   rows: List<DataRow>.generate(
-                      20,
-                      (index) => DataRow(cells: [
-                            DataCell(Text('Row $index')),
-                            DataCell(Text('2023-01-08')),
-                            DataCell(Text('1 hour')),
-                            DataCell(Text('5')),
-                            DataCell(Text('20 hours'))
-                          ])),
+                          20,
+                          (index) => DataRow(cells: [
+                                DataCell(Text('Row $index')),
+                                DataCell(Text('2023-01-08')),
+                                DataCell(Text('1 hour')),
+                                DataCell(Text('5')),
+                                DataCell(Text('20 hours'))
+                              ])) +
+                      [
+                        DataRow(cells: [
+                          DataCell(OutlinedButton(
+                            child: Text(
+                                '${newWeeklyPracticeScheduleStartDate.year}-${newWeeklyPracticeScheduleStartDate.month}-${newWeeklyPracticeScheduleStartDate.day}'),
+                            onPressed: () {
+                              showDatePicker(
+                                      context: context,
+                                      initialDate:
+                                          newWeeklyPracticeScheduleStartDate,
+                                      firstDate: DateTime(1900),
+                                      lastDate:
+                                          newWeeklyPracticeScheduleEndDate ??
+                                              DateTime(2100))
+                                  .then((newStartDate) {
+                                if (newStartDate != null) {
+                                  setState(() {
+                                    newWeeklyPracticeScheduleStartDate =
+                                        newStartDate;
+                                  });
+                                }
+                              });
+                            },
+                          )),
+                          DataCell(Row(
+                            children: [
+                              ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      newWeeklyPracticeScheduleEndDate = null;
+                                    });
+                                  },
+                                  child: const Icon(Icons.cancel)),
+                              OutlinedButton(
+                                child: Text(newWeeklyPracticeScheduleEndDate ==
+                                        null
+                                    ? 'None'
+                                    : '${newWeeklyPracticeScheduleEndDate!.year}-${newWeeklyPracticeScheduleEndDate!.month}-${newWeeklyPracticeScheduleEndDate!.day}'),
+                                onPressed: () {
+                                  showDatePicker(
+                                          context: context,
+                                          initialDate:
+                                              newWeeklyPracticeScheduleEndDate ??
+                                                  newWeeklyPracticeScheduleStartDate,
+                                          firstDate:
+                                              newWeeklyPracticeScheduleStartDate,
+                                          lastDate: DateTime(2100))
+                                      .then((newEndDate) {
+                                    if (newEndDate != null) {
+                                      setState(() {
+                                        newWeeklyPracticeScheduleEndDate =
+                                            newEndDate;
+                                      });
+                                    }
+                                  });
+                                },
+                              )
+                            ],
+                          )),
+                          //TODO add the rest of these buttons
+                          DataCell(Text('TODO')),
+                          DataCell(Text('TODO')),
+                          DataCell(Text('TODO'))
+                        ])
+                      ],
                 ),
               )));
           //TODO remove old code
