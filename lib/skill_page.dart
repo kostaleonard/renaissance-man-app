@@ -1,6 +1,7 @@
 /// Displays an in-depth view of a single skill.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_material_pickers/helpers/show_number_picker.dart';
 import 'package:renaissance_man/repository.dart';
 import 'package:renaissance_man/skill.dart';
 import 'package:renaissance_man/weekly_practice_schedule_list_item.dart';
@@ -131,10 +132,28 @@ class _SkillPageState extends State<SkillPage> {
                               )
                             ],
                           )),
+                          DataCell(OutlinedButton(
+                            child: Text(_getDurationDisplayString(
+                                newWeeklyPracticeScheduleDuration)),
+                            onPressed: () {
+                              showMaterialNumberPicker(
+                                context: context,
+                                title: 'Select practice duration',
+                                maxNumber: 60 * 24,
+                                minNumber: 0,
+                                selectedNumber:
+                                    newWeeklyPracticeScheduleDuration.inMinutes,
+                                step: 5,
+                                onChanged: (value) => setState(() =>
+                                    newWeeklyPracticeScheduleDuration =
+                                        Duration(minutes: value)),
+                              );
+                            },
+                          )),
                           //TODO add the rest of these buttons
                           DataCell(Text('TODO')),
-                          DataCell(Text('TODO')),
-                          DataCell(Text('TODO'))
+                          DataCell(Text(
+                              'TODO')) //TODO show projected total time, in blue or gray or something
                         ])
                       ],
                 ),
@@ -189,5 +208,29 @@ class _SkillPageState extends State<SkillPage> {
         }
       },
     );
+  }
+
+  String _getDurationDisplayString(Duration duration) {
+    final hours = (duration.inMinutes / 60).floor();
+    final minutes = duration.inMinutes % 60;
+    final String hoursPortion;
+    if (hours > 1) {
+      hoursPortion = '$hours hours';
+    } else if (hours == 1) {
+      hoursPortion = '1 hour';
+    } else {
+      hoursPortion = '';
+    }
+    final String minutesPortion;
+    if (minutes == 1) {
+      minutesPortion = '1 minute';
+    } else if (minutes > 1 || hours == 0) {
+      minutesPortion = '$minutes minutes';
+    } else {
+      minutesPortion = '';
+    }
+    return hoursPortion.isNotEmpty && minutesPortion.isNotEmpty
+        ? '$hoursPortion, $minutesPortion'
+        : '$hoursPortion$minutesPortion';
   }
 }
