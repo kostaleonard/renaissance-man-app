@@ -41,6 +41,36 @@ class _SkillPageState extends State<SkillPage> {
           final skill = snapshot.data!;
           return Scaffold(
               appBar: AppBar(title: Text(skill.name)),
+              body: SingleChildScrollView(
+                  child: SizedBox(
+                width: double.infinity,
+                child: DataTable(
+                  columns: const [
+                    DataColumn(label: Expanded(child: Text('Start'))),
+                    DataColumn(label: Expanded(child: Text('End'))),
+                    DataColumn(
+                        label: Expanded(child: Text('Practice duration'))),
+                    DataColumn(
+                        label: Expanded(child: Text('Practices per week'))),
+                    DataColumn(
+                        label: Expanded(child: Text('Practice time to date'))),
+                  ],
+                  //TODO replace rows with actual data
+                  rows: List<DataRow>.generate(
+                      20,
+                      (index) => DataRow(cells: [
+                            DataCell(Text('Row $index')),
+                            DataCell(Text('2023-01-08')),
+                            DataCell(Text('1 hour')),
+                            DataCell(Text('5')),
+                            DataCell(Text('20 hours'))
+                          ])),
+                ),
+              )));
+          //TODO remove old code
+          /*
+          return Scaffold(
+              appBar: AppBar(title: Text(skill.name)),
               body: Column(children: [
                 Expanded(
                     child: ListView.builder(
@@ -83,6 +113,7 @@ class _SkillPageState extends State<SkillPage> {
                           });
                         }))
               ]));
+           */
         }
       },
     );
