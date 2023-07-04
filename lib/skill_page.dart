@@ -56,14 +56,17 @@ class _SkillPageState extends State<SkillPage> {
                 width: double.infinity,
                 child: DataTable(
                   columns: const [
-                    DataColumn(label: Expanded(child: Text('Start'))),
-                    DataColumn(label: Expanded(child: Text('End'))),
+                    DataColumn(label: Flexible(child: Text('Start'))),
+                    DataColumn(label: Flexible(child: Text('End'))),
                     DataColumn(
-                        label: Expanded(child: Text('Practice duration'))),
+                        label: Flexible(child: Text('Practice\nduration'))),
                     DataColumn(
-                        label: Expanded(child: Text('Practices per week'))),
+                        label: Flexible(child: Text('Practices\nper week'))),
                     DataColumn(
-                        label: Expanded(child: Text('Practice time to date'))),
+                        label: Flexible(child: Text('Practice time\nto date'))),
+                    //This column contains the add and remove schedule buttons.
+                    DataColumn(
+                        label: Flexible(child: Text(''))),
                   ],
                   //TODO replace rows with actual data
                   rows: List<DataRow>.generate(
@@ -73,7 +76,9 @@ class _SkillPageState extends State<SkillPage> {
                                 DataCell(Text('2023-01-08')),
                                 DataCell(Text('1 hour')),
                                 DataCell(Text('5')),
-                                DataCell(Text('20 hours'))
+                                DataCell(Text('20 hours')),
+                                //TODO remove element
+                                DataCell(IconButton(icon: const Icon(Icons.remove_circle_outline), onPressed: (){},)),
                               ])) +
                       [
                         DataRow(cells: [
@@ -172,7 +177,8 @@ class _SkillPageState extends State<SkillPage> {
                             _getDurationDisplayString(
                                 _getNewWeeklyPracticeScheduleProjectedTimePracticed()),
                             style: const TextStyle(color: Colors.grey),
-                          ))
+                          )),
+                          DataCell(IconButton(icon: const Icon(Icons.add), onPressed: (){},))
                         ])
                       ],
                 ),
