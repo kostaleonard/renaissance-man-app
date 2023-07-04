@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_material_pickers/helpers/show_number_picker.dart';
 import 'package:renaissance_man/repository.dart';
 import 'package:renaissance_man/skill.dart';
+import 'package:renaissance_man/weekly_practice_schedule.dart';
 import 'package:renaissance_man/weekly_practice_schedule_list_item.dart';
 
 class SkillPage extends StatefulWidget {
@@ -23,6 +24,7 @@ class _SkillPageState extends State<SkillPage> {
   late DateTime newWeeklyPracticeScheduleStartDate;
   DateTime? newWeeklyPracticeScheduleEndDate;
   Duration newWeeklyPracticeScheduleDuration = const Duration(minutes: 30);
+  int newWeeklyPracticeScheduleSessionsPerWeek = 5;
 
   @override
   void initState() {
@@ -150,10 +152,27 @@ class _SkillPageState extends State<SkillPage> {
                               );
                             },
                           )),
-                          //TODO add the rest of these buttons
-                          DataCell(Text('TODO')),
+                          DataCell(OutlinedButton(
+                            child: Text(newWeeklyPracticeScheduleSessionsPerWeek
+                                .toString()),
+                            onPressed: () {
+                              showMaterialNumberPicker(
+                                  context: context,
+                                  title: 'Select practices per week',
+                                  maxNumber: 7 * 10,
+                                  minNumber: 0,
+                                  selectedNumber:
+                                      newWeeklyPracticeScheduleSessionsPerWeek,
+                                  onChanged: (value) => setState(() =>
+                                      newWeeklyPracticeScheduleSessionsPerWeek =
+                                          value));
+                            },
+                          )),
                           DataCell(Text(
-                              'TODO')) //TODO show projected total time, in blue or gray or something
+                            _getDurationDisplayString(
+                                _getNewWeeklyPracticeScheduleProjectedTimePracticed()),
+                            style: const TextStyle(color: Colors.grey),
+                          ))
                         ])
                       ],
                 ),
@@ -232,5 +251,25 @@ class _SkillPageState extends State<SkillPage> {
     return hoursPortion.isNotEmpty && minutesPortion.isNotEmpty
         ? '$hoursPortion, $minutesPortion'
         : '$hoursPortion$minutesPortion';
+  }
+
+  Duration _getNewWeeklyPracticeScheduleProjectedTimePracticed() {
+    final schedule = WeeklyPracticeSchedule(
+        id: -1,
+        startRecurrence: newWeeklyPracticeScheduleStartDate,
+        endRecurrence: newWeeklyPracticeScheduleEndDate,
+        practiceDuration: newWeeklyPracticeScheduleDuration,
+        practiceSessionsPerWeek: newWeeklyPracticeScheduleSessionsPerWeek);
+    final now = DateTime.now();
+    final DateTime endDateForProjection;
+    if (schedule.endRecurrence == null) {
+      endDateForProjection = DateTime(now.year, now.month, now.day);
+    } else if (schedule.endRecurrence!.isAfter(now)) {
+      endDateForProjection = DateTime(now.year, now.month, now.day);
+    } else {
+      endDateForProjection = schedule.endRecurrence!;
+    }
+    return schedule.getTimePracticedBetween(
+        schedule.startRecurrence, endDateForProjection);
   }
 }
