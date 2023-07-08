@@ -56,6 +56,13 @@ abstract class Repository {
   /// [ArgumentError].
   Future<WeeklyPracticeSchedule> readWeeklyPracticeSchedule(int id);
 
+  /// Returns a [List] of [WeeklyPracticeSchedule]s from backend storage.
+  ///
+  /// Returns a [List] of [WeeklyPracticeSchedule]s whose IDs match the ones
+  /// given, and in the same order. If, for any ID in [ids], there is no
+  /// [WeeklyPracticeSchedule] with matching ID, throws an [ArgumentError].
+  Future<List<WeeklyPracticeSchedule>> readWeeklyPracticeSchedules(List<int> ids);
+
   /// Updates a [WeeklyPracticeSchedule] in backend storage and returns it.
   ///
   /// Updates in backend storage the [WeeklyPracticeSchedule] with ID

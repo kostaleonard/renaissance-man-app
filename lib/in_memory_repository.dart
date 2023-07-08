@@ -5,6 +5,7 @@ import 'package:renaissance_man/repository.dart';
 import 'package:renaissance_man/weekly_practice_schedule.dart';
 
 class InMemoryRepository extends Repository {
+  //TODO it might be better to have a Map from int to Skill/WeeklyPracticeSchedule for faster lookups with an ID
   final _skills = <Skill>[]; // TODO would like data structure with O(1) prepend
   var _nextAvailableSkillId = 0;
   final _weeklyPracticeSchedules = <WeeklyPracticeSchedule>{};
@@ -85,6 +86,20 @@ class InMemoryRepository extends Repository {
           'The repository does not contain weekly practice schedule $id');
     });
     return Future.delayed(withDelay, () => weeklyPracticeSchedule);
+  }
+
+  @override
+  Future<List<WeeklyPracticeSchedule>> readWeeklyPracticeSchedules(
+      List<int> ids) {
+    //TODO write a better algorithm
+    final schedules = ids
+        .map((id) => _weeklyPracticeSchedules
+                .firstWhere((schedule) => schedule.id == id, orElse: () {
+              throw ArgumentError(
+                  'The repository does not contain weekly practice schedule $id');
+            }))
+        .toList(growable: false);
+    return Future.delayed(withDelay, () => schedules);
   }
 
   @override

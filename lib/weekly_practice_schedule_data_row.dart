@@ -1,25 +1,25 @@
-/// Displays an in-depth view of a single skill.
+/// Displays a WeeklyPracticeSchedule in a DataRow.
 
 import 'package:flutter/material.dart';
 import 'package:renaissance_man/repository.dart';
 import 'package:renaissance_man/weekly_practice_schedule.dart';
 
-class WeeklyPracticeScheduleListItem extends StatefulWidget {
+class WeeklyPracticeScheduleDataRow extends StatefulWidget {
   final Repository repository;
   final int weeklyPracticeScheduleId;
 
-  const WeeklyPracticeScheduleListItem(
+  const WeeklyPracticeScheduleDataRow(
       {Key? key,
       required this.repository,
       required this.weeklyPracticeScheduleId})
       : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _WeeklyPracticeScheduleListItemState();
+  State<StatefulWidget> createState() => _WeeklyPracticeScheduleDataRowState();
 }
 
-class _WeeklyPracticeScheduleListItemState
-    extends State<WeeklyPracticeScheduleListItem> {
+class _WeeklyPracticeScheduleDataRowState
+    extends State<WeeklyPracticeScheduleDataRow> {
   static const _biggerFont = TextStyle(fontSize: 18);
   late Future<WeeklyPracticeSchedule> readWeeklyPracticeScheduleQuery;
 
