@@ -5,7 +5,6 @@ import 'package:flutter_material_pickers/helpers/show_number_picker.dart';
 import 'package:renaissance_man/repository.dart';
 import 'package:renaissance_man/skill.dart';
 import 'package:renaissance_man/weekly_practice_schedule.dart';
-import 'package:renaissance_man/weekly_practice_schedule_data_row.dart';
 
 class SkillPage extends StatefulWidget {
   final Repository repository;
