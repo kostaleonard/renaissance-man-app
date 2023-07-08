@@ -40,7 +40,6 @@ class _SkillPageState extends State<SkillPage> {
   @override
   Widget build(BuildContext context) {
     //TODO add a large graph showing cumulative progress (like in an investment portfolio)
-    //TODO add widgets for adding/removing scheduled practice sessions
     return FutureBuilder(
       future: readAndUpdateSkillQuery,
       builder: (context, snapshot) {
@@ -51,7 +50,6 @@ class _SkillPageState extends State<SkillPage> {
         } else {
           final skill = snapshot.data!;
           //TODO always show header column
-          //TODO add column with empty header for X and check marks to remove and add schedules (add only for the last row). These buttons should be subdued.
           return Scaffold(
               appBar: AppBar(title: Text(skill.name)),
               body: FutureBuilder(
@@ -83,7 +81,6 @@ class _SkillPageState extends State<SkillPage> {
                             //This column contains the add and remove schedule buttons.
                             DataColumn(label: Flexible(child: Text(''))),
                           ],
-                          //TODO replace rows with actual data
                           rows: List<DataRow>.generate(
                                   weeklyPracticeSchedules.length, (index) {
                                 final schedule = weeklyPracticeSchedules[index];
@@ -104,11 +101,30 @@ class _SkillPageState extends State<SkillPage> {
                                       schedule.getTimePracticedBetween(
                                           schedule.startRecurrence,
                                           schedule.endRecurrence ?? today)))),
-                                  //TODO remove element
                                   DataCell(IconButton(
                                     icon:
                                         const Icon(Icons.remove_circle_outline),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      final skillWithoutSchedule = Skill(
+                                          id: skill.id,
+                                          name: skill.name,
+                                          createdAt: skill.createdAt,
+                                          weeklyPracticeScheduleIds: skill
+                                              .weeklyPracticeScheduleIds
+                                              .where((id) => id != schedule.id)
+                                              .toList(growable: false));
+                                      setState(() {
+                                        readAndUpdateSkillQuery = widget
+                                            .repository
+                                            .updateSkill(skillWithoutSchedule);
+                                        readWeeklyPracticeScheduleQuery =
+                                            readAndUpdateSkillQuery.then(
+                                                (skill) => widget.repository
+                                                    .readWeeklyPracticeSchedules(
+                                                        skill
+                                                            .weeklyPracticeScheduleIds));
+                                      });
+                                    },
                                   )),
                                 ]);
                               }) +
