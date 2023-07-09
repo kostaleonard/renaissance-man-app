@@ -10,11 +10,11 @@ import 'package:renaissance_man/weekly_practice_schedule.dart';
 //TODO when a user closes the skill page after making changes, do those changes reflect on the card here?
 class SkillPreviewCard extends StatefulWidget {
   final Repository repository;
-  final Skill skill;
+  final int skillId;
   static const height = 298.0;
 
   const SkillPreviewCard(
-      {super.key, required this.repository, required this.skill});
+      {super.key, required this.repository, required this.skillId});
 
   @override
   State<StatefulWidget> createState() => _SkillPreviewCardState();
@@ -22,13 +22,16 @@ class SkillPreviewCard extends StatefulWidget {
 
 class _SkillPreviewCardState extends State<SkillPreviewCard> {
   static const _biggerFont = TextStyle(fontSize: 18);
+  late Future<Skill> readSkillQuery;
   late Future<List<WeeklyPracticeSchedule>> readWeeklyPracticeScheduleQuery;
 
   @override
   void initState() {
     super.initState();
-    readWeeklyPracticeScheduleQuery = widget.repository
-        .readWeeklyPracticeSchedules(widget.skill.weeklyPracticeScheduleIds);
+    readSkillQuery = widget.repository.readSkill(widget.skillId);
+    readWeeklyPracticeScheduleQuery = readSkillQuery.then((skill) => widget
+        .repository
+        .readWeeklyPracticeSchedules(skill.weeklyPracticeScheduleIds));
   }
 
   @override
@@ -37,49 +40,76 @@ class _SkillPreviewCardState extends State<SkillPreviewCard> {
       transitionDuration: const Duration(milliseconds: 350),
       transitionType: ContainerTransitionType.fade,
       closedBuilder: (context, openContainer) {
-        return Card(
-          clipBehavior: Clip.antiAlias,
-          child: InkWell(
-              onTap: openContainer,
-              splashColor:
-                  Theme.of(context).colorScheme.onSurface.withOpacity(0.12),
-              highlightColor: Colors.transparent,
-              child: Column(children: [
-                Text(widget.skill.name),
-                FutureBuilder(
-                    future: readWeeklyPracticeScheduleQuery,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return const Center(
-                            child: Text('No connection', style: _biggerFont));
-                      } else {
-                        final weeklyPracticeSchedules = snapshot.data!;
-                        final now = DateTime.now();
-                        final today = DateTime(now.year, now.month, now.day);
-                        final weeklyPracticeSchedulesTotalDuration =
-                            weeklyPracticeSchedules.map((schedule) =>
-                                schedule.getTimePracticedBetween(
-                                    schedule.startRecurrence,
-                                    schedule.endRecurrence ?? today));
-                        final totalPracticeDuration = weeklyPracticeSchedules
-                                .isEmpty
-                            ? Duration.zero
-                            : weeklyPracticeSchedulesTotalDuration
-                                .reduce((value, element) => value + element);
-                        return Text(
-                            _getDurationDisplayString(totalPracticeDuration));
-                      }
-                    })
-              ])),
-        );
+        return FutureBuilder(
+            future: readSkillQuery,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return const Center(
+                    child: Text('No connection', style: _biggerFont));
+              } else {
+                final skill = snapshot.data!;
+                return Card(
+                  clipBehavior: Clip.antiAlias,
+                  child: InkWell(
+                      onTap: openContainer,
+                      splashColor: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.12),
+                      highlightColor: Colors.transparent,
+                      child: Column(children: [
+                        Text(skill.name),
+                        FutureBuilder(
+                            future: readWeeklyPracticeScheduleQuery,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return const Center(
+                                    child: Text('No connection',
+                                        style: _biggerFont));
+                              } else {
+                                final weeklyPracticeSchedules = snapshot.data!;
+                                final now = DateTime.now();
+                                final today =
+                                    DateTime(now.year, now.month, now.day);
+                                final weeklyPracticeSchedulesTotalDuration =
+                                    weeklyPracticeSchedules.map((schedule) =>
+                                        schedule.getTimePracticedBetween(
+                                            schedule.startRecurrence,
+                                            schedule.endRecurrence ?? today));
+                                final totalPracticeDuration =
+                                    weeklyPracticeSchedules.isEmpty
+                                        ? Duration.zero
+                                        : weeklyPracticeSchedulesTotalDuration
+                                            .reduce((value, element) =>
+                                                value + element);
+                                return Text(_getDurationDisplayString(
+                                    totalPracticeDuration));
+                              }
+                            })
+                      ])),
+                );
+              }
+            });
       },
       openBuilder: (context, closeContainer) {
         return SkillPage(
           repository: widget.repository,
-          skillId: widget.skill.id,
+          skillId: widget.skillId,
         );
+      },
+      onClosed: (_) {
+        setState(() {
+          readSkillQuery = widget.repository.readSkill(widget.skillId);
+          readWeeklyPracticeScheduleQuery = readSkillQuery.then((skill) =>
+              widget.repository.readWeeklyPracticeSchedules(
+                  skill.weeklyPracticeScheduleIds));
+        });
       },
     );
   }
