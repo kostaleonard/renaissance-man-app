@@ -105,6 +105,7 @@ class _SkillPageState extends State<SkillPage> {
                                     icon:
                                         const Icon(Icons.remove_circle_outline),
                                     onPressed: () {
+                                      // We purposefully don't delete the schedule from the database.
                                       final skillWithoutSchedule = Skill(
                                           id: skill.id,
                                           name: skill.name,
@@ -152,17 +153,18 @@ class _SkillPageState extends State<SkillPage> {
                                       });
                                     },
                                   )),
-                                  DataCell(Row(
-                                    children: [
-                                      ElevatedButton(
+                                  DataCell(Builder(
+                                    builder: (context) {
+                                      final clearEndDateButton = ElevatedButton(
                                           onPressed: () {
                                             setState(() {
                                               newWeeklyPracticeScheduleEndDate =
                                                   null;
                                             });
                                           },
-                                          child: const Icon(Icons.cancel)),
-                                      OutlinedButton(
+                                          child: const Icon(Icons.cancel));
+                                      final selectEndDateButton =
+                                          OutlinedButton(
                                         child: Text(
                                             newWeeklyPracticeScheduleEndDate ==
                                                     null
@@ -186,8 +188,18 @@ class _SkillPageState extends State<SkillPage> {
                                             }
                                           });
                                         },
-                                      )
-                                    ],
+                                      );
+                                      if (newWeeklyPracticeScheduleEndDate ==
+                                          null) {
+                                        return selectEndDateButton;
+                                      }
+                                      return Row(
+                                        children: [
+                                          clearEndDateButton,
+                                          selectEndDateButton
+                                        ],
+                                      );
+                                    },
                                   )),
                                   DataCell(OutlinedButton(
                                     child: Text(_getDurationDisplayString(
