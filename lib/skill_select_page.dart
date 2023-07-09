@@ -55,6 +55,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
             appBar: AppBar(title: const Text('Renaissance Man')),
             body: Column(
               children: [
+                //TODO when we add users, this future will be to get all the skill IDs that belong to a user. That will be more efficient.
                 FutureBuilder(
                   future: skillQuery,
                   builder: (context, snapshot) {
@@ -67,7 +68,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                       final skillsToDisplay = snapshot.data ?? [];
                       final skillPreviewCards = skillsToDisplay
                           .map((skill) => SkillPreviewCard(
-                              repository: widget.repository, skill: skill))
+                              repository: widget.repository, skillId: skill.id))
                           .toList(growable: false);
                       //TODO make this button more muted so that it doesn't stand out
                       final addSkillButton = CupertinoButton.filled(
