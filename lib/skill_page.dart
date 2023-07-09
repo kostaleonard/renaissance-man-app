@@ -62,225 +62,254 @@ class _SkillPageState extends State<SkillPage> {
                           child: Text('No connection', style: _biggerFont));
                     } else {
                       final weeklyPracticeSchedules = snapshot.data!;
+                      final now = DateTime.now();
+                      final today = DateTime(now.year, now.month, now.day);
+                      final weeklyPracticeSchedulesTotalDuration =
+                          weeklyPracticeSchedules
+                              .map((schedule) =>
+                                  schedule.getTimePracticedBetween(
+                                      schedule.startRecurrence,
+                                      schedule.endRecurrence ?? today))
+                              .toList(growable: false);
+                      final totalPracticeDuration =
+                          weeklyPracticeSchedules.isEmpty
+                              ? Duration.zero
+                              : weeklyPracticeSchedulesTotalDuration
+                                  .reduce((value, element) => value + element);
                       return SingleChildScrollView(
-                          child: SizedBox(
-                        width: double.infinity,
-                        child: DataTable(
-                          columns: const [
-                            DataColumn(label: Flexible(child: Text('Start'))),
-                            DataColumn(label: Flexible(child: Text('End'))),
-                            DataColumn(
-                                label: Flexible(
-                                    child: Text('Practice\nduration'))),
-                            DataColumn(
-                                label: Flexible(
-                                    child: Text('Practices\nper week'))),
-                            DataColumn(
-                                label: Flexible(
-                                    child: Text('Practice time\nto date'))),
-                            //This column contains the add and remove schedule buttons.
-                            DataColumn(label: Flexible(child: Text(''))),
-                          ],
-                          rows: List<DataRow>.generate(
-                                  weeklyPracticeSchedules.length, (index) {
-                                final schedule = weeklyPracticeSchedules[index];
-                                final now = DateTime.now();
-                                final today =
-                                    DateTime(now.year, now.month, now.day);
-                                return DataRow(cells: [
-                                  DataCell(Text(
-                                      '${schedule.startRecurrence.year}-${schedule.startRecurrence.month}-${schedule.startRecurrence.day}')),
-                                  DataCell(Text(schedule.endRecurrence == null
-                                      ? 'None'
-                                      : '${schedule.endRecurrence!.year}-${schedule.endRecurrence!.month}-${schedule.endRecurrence!.day}')),
-                                  DataCell(Text(_getDurationDisplayString(
-                                      schedule.practiceDuration))),
-                                  DataCell(Text(
-                                      '${schedule.practiceSessionsPerWeek}')),
-                                  DataCell(Text(_getDurationDisplayString(
-                                      schedule.getTimePracticedBetween(
-                                          schedule.startRecurrence,
-                                          schedule.endRecurrence ?? today)))),
-                                  DataCell(IconButton(
-                                    icon:
-                                        const Icon(Icons.remove_circle_outline),
-                                    onPressed: () {
-                                      // We purposefully don't delete the schedule from the database.
-                                      final skillWithoutSchedule = Skill(
-                                          id: skill.id,
-                                          name: skill.name,
-                                          createdAt: skill.createdAt,
-                                          weeklyPracticeScheduleIds: skill
-                                              .weeklyPracticeScheduleIds
-                                              .where((id) => id != schedule.id)
-                                              .toList(growable: false));
-                                      setState(() {
-                                        readAndUpdateSkillQuery = widget
-                                            .repository
-                                            .updateSkill(skillWithoutSchedule);
-                                        readWeeklyPracticeScheduleQuery =
-                                            readAndUpdateSkillQuery.then(
-                                                (skill) => widget.repository
-                                                    .readWeeklyPracticeSchedules(
-                                                        skill
-                                                            .weeklyPracticeScheduleIds));
-                                      });
-                                    },
-                                  )),
-                                ]);
-                              }) +
-                              [
-                                DataRow(cells: [
-                                  DataCell(OutlinedButton(
-                                    child: Text(
-                                        '${newWeeklyPracticeScheduleStartDate.year}-${newWeeklyPracticeScheduleStartDate.month}-${newWeeklyPracticeScheduleStartDate.day}'),
-                                    onPressed: () {
-                                      showDatePicker(
-                                              context: context,
-                                              initialDate:
-                                                  newWeeklyPracticeScheduleStartDate,
-                                              firstDate: DateTime(1900),
-                                              lastDate:
-                                                  newWeeklyPracticeScheduleEndDate ??
-                                                      DateTime(2100))
-                                          .then((newStartDate) {
-                                        if (newStartDate != null) {
+                          child: Column(children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 24, bottom: 24),
+                          child: Text(
+                            _getDurationDisplayString(totalPracticeDuration),
+                            style: const TextStyle(fontSize: 32),
+                          ),
+                        ),
+                        SizedBox(
+                            width: double.infinity,
+                            child: DataTable(
+                              columns: const [
+                                DataColumn(
+                                    label: Flexible(child: Text('Start'))),
+                                DataColumn(label: Flexible(child: Text('End'))),
+                                DataColumn(
+                                    label: Flexible(
+                                        child: Text('Practice\nduration'))),
+                                DataColumn(
+                                    label: Flexible(
+                                        child: Text('Practices\nper week'))),
+                                DataColumn(
+                                    label: Flexible(
+                                        child: Text('Practice time\nto date'))),
+                                //This column contains the add and remove schedule buttons.
+                                DataColumn(label: Flexible(child: Text(''))),
+                              ],
+                              rows: List<DataRow>.generate(
+                                      weeklyPracticeSchedules.length, (index) {
+                                    final schedule =
+                                        weeklyPracticeSchedules[index];
+                                    return DataRow(cells: [
+                                      DataCell(Text(
+                                          '${schedule.startRecurrence.year}-${schedule.startRecurrence.month}-${schedule.startRecurrence.day}')),
+                                      DataCell(Text(schedule.endRecurrence ==
+                                              null
+                                          ? 'None'
+                                          : '${schedule.endRecurrence!.year}-${schedule.endRecurrence!.month}-${schedule.endRecurrence!.day}')),
+                                      DataCell(Text(_getDurationDisplayString(
+                                          schedule.practiceDuration))),
+                                      DataCell(Text(
+                                          '${schedule.practiceSessionsPerWeek}')),
+                                      DataCell(Text(_getDurationDisplayString(
+                                          weeklyPracticeSchedulesTotalDuration[
+                                              index]))),
+                                      DataCell(IconButton(
+                                        icon: const Icon(
+                                            Icons.remove_circle_outline),
+                                        onPressed: () {
+                                          // We purposefully don't delete the schedule from the database.
+                                          final skillWithoutSchedule = Skill(
+                                              id: skill.id,
+                                              name: skill.name,
+                                              createdAt: skill.createdAt,
+                                              weeklyPracticeScheduleIds: skill
+                                                  .weeklyPracticeScheduleIds
+                                                  .where(
+                                                      (id) => id != schedule.id)
+                                                  .toList(growable: false));
                                           setState(() {
-                                            newWeeklyPracticeScheduleStartDate =
-                                                newStartDate;
+                                            readAndUpdateSkillQuery =
+                                                widget.repository.updateSkill(
+                                                    skillWithoutSchedule);
+                                            readWeeklyPracticeScheduleQuery =
+                                                readAndUpdateSkillQuery.then(
+                                                    (skill) => widget.repository
+                                                        .readWeeklyPracticeSchedules(
+                                                            skill
+                                                                .weeklyPracticeScheduleIds));
                                           });
-                                        }
-                                      });
-                                    },
-                                  )),
-                                  DataCell(Builder(
-                                    builder: (context) {
-                                      final clearEndDateButton = ElevatedButton(
-                                          onPressed: () {
-                                            setState(() {
-                                              newWeeklyPracticeScheduleEndDate =
-                                                  null;
-                                            });
-                                          },
-                                          child: const Icon(Icons.cancel));
-                                      final selectEndDateButton =
-                                          OutlinedButton(
+                                        },
+                                      )),
+                                    ]);
+                                  }) +
+                                  [
+                                    DataRow(cells: [
+                                      DataCell(OutlinedButton(
                                         child: Text(
-                                            newWeeklyPracticeScheduleEndDate ==
-                                                    null
-                                                ? 'None'
-                                                : '${newWeeklyPracticeScheduleEndDate!.year}-${newWeeklyPracticeScheduleEndDate!.month}-${newWeeklyPracticeScheduleEndDate!.day}'),
+                                            '${newWeeklyPracticeScheduleStartDate.year}-${newWeeklyPracticeScheduleStartDate.month}-${newWeeklyPracticeScheduleStartDate.day}'),
                                         onPressed: () {
                                           showDatePicker(
                                                   context: context,
                                                   initialDate:
-                                                      newWeeklyPracticeScheduleEndDate ??
-                                                          newWeeklyPracticeScheduleStartDate,
-                                                  firstDate:
                                                       newWeeklyPracticeScheduleStartDate,
-                                                  lastDate: DateTime(2100))
-                                              .then((newEndDate) {
-                                            if (newEndDate != null) {
+                                                  firstDate: DateTime(1900),
+                                                  lastDate:
+                                                      newWeeklyPracticeScheduleEndDate ??
+                                                          DateTime(2100))
+                                              .then((newStartDate) {
+                                            if (newStartDate != null) {
                                               setState(() {
-                                                newWeeklyPracticeScheduleEndDate =
-                                                    newEndDate;
+                                                newWeeklyPracticeScheduleStartDate =
+                                                    newStartDate;
                                               });
                                             }
                                           });
                                         },
-                                      );
-                                      if (newWeeklyPracticeScheduleEndDate ==
-                                          null) {
-                                        return selectEndDateButton;
-                                      }
-                                      return Row(
-                                        children: [
-                                          clearEndDateButton,
-                                          selectEndDateButton
-                                        ],
-                                      );
-                                    },
-                                  )),
-                                  DataCell(OutlinedButton(
-                                    child: Text(_getDurationDisplayString(
-                                        newWeeklyPracticeScheduleDuration)),
-                                    onPressed: () {
-                                      showMaterialNumberPicker(
-                                        context: context,
-                                        title: 'Select practice duration',
-                                        maxNumber: 60 * 24,
-                                        minNumber: 0,
-                                        selectedNumber:
-                                            newWeeklyPracticeScheduleDuration
-                                                .inMinutes,
-                                        step: 5,
-                                        onChanged: (value) => setState(() =>
-                                            newWeeklyPracticeScheduleDuration =
-                                                Duration(minutes: value)),
-                                      );
-                                    },
-                                  )),
-                                  DataCell(OutlinedButton(
-                                    child: Text(
-                                        newWeeklyPracticeScheduleSessionsPerWeek
-                                            .toString()),
-                                    onPressed: () {
-                                      showMaterialNumberPicker(
-                                          context: context,
-                                          title: 'Select practices per week',
-                                          maxNumber: 7 * 10,
-                                          minNumber: 0,
-                                          selectedNumber:
-                                              newWeeklyPracticeScheduleSessionsPerWeek,
-                                          onChanged: (value) => setState(() =>
-                                              newWeeklyPracticeScheduleSessionsPerWeek =
-                                                  value));
-                                    },
-                                  )),
-                                  DataCell(Text(
-                                    _getDurationDisplayString(
-                                        _getNewWeeklyPracticeScheduleProjectedTimePracticed()),
-                                    style: const TextStyle(color: Colors.grey),
-                                  )),
-                                  DataCell(IconButton(
-                                    icon: const Icon(Icons.add),
-                                    onPressed: () {
-                                      widget.repository
-                                          .createWeeklyPracticeSchedule(
-                                              startRecurrence:
-                                                  newWeeklyPracticeScheduleStartDate,
-                                              endRecurrence:
-                                                  newWeeklyPracticeScheduleEndDate,
-                                              practiceDuration:
-                                                  newWeeklyPracticeScheduleDuration,
-                                              practiceSessionsPerWeek:
-                                                  newWeeklyPracticeScheduleSessionsPerWeek)
-                                          .then((newSchedule) {
-                                        final skillWithAdditionalSchedule = Skill(
-                                            id: skill.id,
-                                            name: skill.name,
-                                            createdAt: skill.createdAt,
-                                            weeklyPracticeScheduleIds: skill
-                                                    .weeklyPracticeScheduleIds +
-                                                [newSchedule.id]);
-                                        setState(() {
-                                          readAndUpdateSkillQuery =
-                                              widget.repository.updateSkill(
-                                                  skillWithAdditionalSchedule);
-                                          readWeeklyPracticeScheduleQuery =
-                                              readAndUpdateSkillQuery.then(
-                                                  (skill) => widget.repository
-                                                      .readWeeklyPracticeSchedules(
-                                                          skill
-                                                              .weeklyPracticeScheduleIds));
-                                        });
-                                      });
-                                    },
-                                  ))
-                                ])
-                              ],
-                        ),
-                      ));
+                                      )),
+                                      DataCell(Builder(
+                                        builder: (context) {
+                                          final clearEndDateButton =
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    setState(() {
+                                                      newWeeklyPracticeScheduleEndDate =
+                                                          null;
+                                                    });
+                                                  },
+                                                  child:
+                                                      const Icon(Icons.cancel));
+                                          final selectEndDateButton =
+                                              OutlinedButton(
+                                            child: Text(
+                                                newWeeklyPracticeScheduleEndDate ==
+                                                        null
+                                                    ? 'None'
+                                                    : '${newWeeklyPracticeScheduleEndDate!.year}-${newWeeklyPracticeScheduleEndDate!.month}-${newWeeklyPracticeScheduleEndDate!.day}'),
+                                            onPressed: () {
+                                              showDatePicker(
+                                                      context: context,
+                                                      initialDate:
+                                                          newWeeklyPracticeScheduleEndDate ??
+                                                              newWeeklyPracticeScheduleStartDate,
+                                                      firstDate:
+                                                          newWeeklyPracticeScheduleStartDate,
+                                                      lastDate: DateTime(2100))
+                                                  .then((newEndDate) {
+                                                if (newEndDate != null) {
+                                                  setState(() {
+                                                    newWeeklyPracticeScheduleEndDate =
+                                                        newEndDate;
+                                                  });
+                                                }
+                                              });
+                                            },
+                                          );
+                                          if (newWeeklyPracticeScheduleEndDate ==
+                                              null) {
+                                            return selectEndDateButton;
+                                          }
+                                          return Row(
+                                            children: [
+                                              clearEndDateButton,
+                                              selectEndDateButton
+                                            ],
+                                          );
+                                        },
+                                      )),
+                                      DataCell(OutlinedButton(
+                                        child: Text(_getDurationDisplayString(
+                                            newWeeklyPracticeScheduleDuration)),
+                                        onPressed: () {
+                                          showMaterialNumberPicker(
+                                            context: context,
+                                            title:
+                                                'Select practice duration in minutes',
+                                            maxNumber: 60 * 24,
+                                            minNumber: 0,
+                                            selectedNumber:
+                                                newWeeklyPracticeScheduleDuration
+                                                    .inMinutes,
+                                            step: 5,
+                                            onChanged: (value) => setState(() =>
+                                                newWeeklyPracticeScheduleDuration =
+                                                    Duration(minutes: value)),
+                                          );
+                                        },
+                                      )),
+                                      DataCell(OutlinedButton(
+                                        child: Text(
+                                            newWeeklyPracticeScheduleSessionsPerWeek
+                                                .toString()),
+                                        onPressed: () {
+                                          showMaterialNumberPicker(
+                                              context: context,
+                                              title:
+                                                  'Select practices per week',
+                                              maxNumber: 7 * 10,
+                                              minNumber: 0,
+                                              selectedNumber:
+                                                  newWeeklyPracticeScheduleSessionsPerWeek,
+                                              onChanged: (value) => setState(() =>
+                                                  newWeeklyPracticeScheduleSessionsPerWeek =
+                                                      value));
+                                        },
+                                      )),
+                                      DataCell(Text(
+                                        _getDurationDisplayString(
+                                            _getNewWeeklyPracticeScheduleProjectedTimePracticed()),
+                                        style:
+                                            const TextStyle(color: Colors.grey),
+                                      )),
+                                      DataCell(IconButton(
+                                        icon: const Icon(Icons.add),
+                                        onPressed: () {
+                                          widget.repository
+                                              .createWeeklyPracticeSchedule(
+                                                  startRecurrence:
+                                                      newWeeklyPracticeScheduleStartDate,
+                                                  endRecurrence:
+                                                      newWeeklyPracticeScheduleEndDate,
+                                                  practiceDuration:
+                                                      newWeeklyPracticeScheduleDuration,
+                                                  practiceSessionsPerWeek:
+                                                      newWeeklyPracticeScheduleSessionsPerWeek)
+                                              .then((newSchedule) {
+                                            final skillWithAdditionalSchedule =
+                                                Skill(
+                                                    id: skill.id,
+                                                    name: skill.name,
+                                                    createdAt: skill.createdAt,
+                                                    weeklyPracticeScheduleIds:
+                                                        skill.weeklyPracticeScheduleIds +
+                                                            [newSchedule.id]);
+                                            setState(() {
+                                              readAndUpdateSkillQuery =
+                                                  widget.repository.updateSkill(
+                                                      skillWithAdditionalSchedule);
+                                              readWeeklyPracticeScheduleQuery =
+                                                  readAndUpdateSkillQuery.then(
+                                                      (skill) => widget
+                                                          .repository
+                                                          .readWeeklyPracticeSchedules(
+                                                              skill
+                                                                  .weeklyPracticeScheduleIds));
+                                            });
+                                          });
+                                        },
+                                      ))
+                                    ])
+                                  ],
+                            )),
+                      ]));
                     }
                   }));
         }
