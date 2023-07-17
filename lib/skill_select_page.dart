@@ -53,6 +53,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
         },
         child: Scaffold(
             appBar: AppBar(title: const Text('Renaissance Man')),
+            backgroundColor: Theme.of(context).colorScheme.background,
             body: Column(
               children: [
                 //TODO when we add users, this future will be to get all the skill IDs that belong to a user. That will be more efficient.
