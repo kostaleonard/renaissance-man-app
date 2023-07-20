@@ -21,7 +21,7 @@ class SkillPreviewCard extends StatefulWidget {
 }
 
 class _SkillPreviewCardState extends State<SkillPreviewCard> {
-  static const _biggerFont = TextStyle(fontSize: 18);
+  static const _errorMessageFont = TextStyle(fontSize: 18);
   late Future<Skill> readSkillQuery;
   late Future<List<WeeklyPracticeSchedule>> readWeeklyPracticeScheduleQuery;
 
@@ -47,7 +47,7 @@ class _SkillPreviewCardState extends State<SkillPreviewCard> {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return const Center(
-                    child: Text('No connection', style: _biggerFont));
+                    child: Text('No connection', style: _errorMessageFont));
               } else {
                 final skill = snapshot.data!;
                 return Card(
@@ -60,7 +60,11 @@ class _SkillPreviewCardState extends State<SkillPreviewCard> {
                           .withOpacity(0.12),
                       highlightColor: Colors.transparent,
                       child: Column(children: [
-                        Text(skill.name),
+                        Expanded(
+                            child: Text(
+                          skill.name,
+                          style: Theme.of(context).textTheme.headlineSmall,
+                        )),
                         FutureBuilder(
                             future: readWeeklyPracticeScheduleQuery,
                             builder: (context, snapshot) {
@@ -71,7 +75,7 @@ class _SkillPreviewCardState extends State<SkillPreviewCard> {
                               } else if (snapshot.hasError) {
                                 return const Center(
                                     child: Text('No connection',
-                                        style: _biggerFont));
+                                        style: _errorMessageFont));
                               } else {
                                 final weeklyPracticeSchedules = snapshot.data!;
                                 final now = DateTime.now();
@@ -89,7 +93,7 @@ class _SkillPreviewCardState extends State<SkillPreviewCard> {
                                             .reduce((value, element) =>
                                                 value + element);
                                 return Text(_getDurationDisplayString(
-                                    totalPracticeDuration));
+                                    totalPracticeDuration), style: Theme.of(context).textTheme.titleLarge,);
                               }
                             })
                       ])),
