@@ -24,6 +24,7 @@ class RenaissanceManApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSwatch(
               primarySwatch: Colors.green,
+              accentColor: const Color(0xffddff9f),
               backgroundColor: const Color(0xffcfcecf)),
         ),
         home: SkillSelectPage(
