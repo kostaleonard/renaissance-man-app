@@ -53,7 +53,6 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
         },
         child: Scaffold(
             appBar: AppBar(title: const Text('Renaissance Man')),
-            backgroundColor: Theme.of(context).colorScheme.background,
             //TODO the limit on column width with SizedBox is nice, but the scrollbar is only within the column
             body: Center(
                 child: SizedBox(
@@ -135,7 +134,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                                           },
                                           child: Container(
                                               width: 300,
-                                              color: Colors.grey,
+                                              color: const Color(0xffcfcecf),
                                               child: Column(children: [
                                                 Row(children: [
                                                   const Expanded(
