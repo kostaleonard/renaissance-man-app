@@ -27,7 +27,8 @@ class RenaissanceManApp extends StatelessWidget {
               accentColor: const Color(0xff06fcbe),
           ),
           cardTheme: const CardTheme(
-            color: Color(0xffadff9f)
+            color: Color(0xffc7ffbc),
+            margin: EdgeInsets.zero,
           )
         ),
         home: SkillSelectPage(

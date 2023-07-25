@@ -19,7 +19,7 @@ class SkillSelectPage extends StatefulWidget {
 
 class _SkillSelectPageState extends State<SkillSelectPage> {
   static const _biggerFont = TextStyle(fontSize: 18);
-  static const _gridViewPadding = 8.0;
+  static const _gridViewPadding = 20.0;
   static const _gridViewMainAxisSpacing = 25.0;
   static const _gridViewCrossAxisSpacing = 10.0;
   static const _gridViewMaxCrossAxisExtent = 300.0;
