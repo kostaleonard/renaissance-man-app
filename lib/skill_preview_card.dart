@@ -11,7 +11,6 @@ import 'package:renaissance_man/weekly_practice_schedule.dart';
 class SkillPreviewCard extends StatefulWidget {
   final Repository repository;
   final int skillId;
-  static const height = 312.0;
 
   const SkillPreviewCard(
       {super.key, required this.repository, required this.skillId});
