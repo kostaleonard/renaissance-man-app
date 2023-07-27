@@ -44,8 +44,7 @@ class _SkillPreviewCardState extends State<SkillPreviewCard> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                return const Center(
-                    child: Text('No connection'));
+                return const Center(child: Text('No connection'));
               } else {
                 final skill = snapshot.data!;
                 return Card(

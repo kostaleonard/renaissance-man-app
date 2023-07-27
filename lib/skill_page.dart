@@ -57,8 +57,7 @@ class _SkillPageState extends State<SkillPage> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
-                      return const Center(
-                          child: Text('No connection'));
+                      return const Center(child: Text('No connection'));
                     } else {
                       final weeklyPracticeSchedules = snapshot.data!;
                       final now = DateTime.now();
@@ -232,7 +231,9 @@ class _SkillPageState extends State<SkillPage> {
                                             context: context,
                                             title:
                                                 'Select practice duration in minutes',
-                                            headerColor: Theme.of(context).colorScheme.primary,
+                                            headerColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
                                             maxNumber: 60 * 24,
                                             minNumber: 0,
                                             selectedNumber:
@@ -254,7 +255,9 @@ class _SkillPageState extends State<SkillPage> {
                                               context: context,
                                               title:
                                                   'Select practices per week',
-                                              headerColor: Theme.of(context).colorScheme.primary,
+                                              headerColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
                                               maxNumber: 7 * 10,
                                               minNumber: 0,
                                               selectedNumber:

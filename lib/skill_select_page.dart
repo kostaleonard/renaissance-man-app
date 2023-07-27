@@ -67,8 +67,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                               return const Center(
                                   child: CircularProgressIndicator());
                             } else if (snapshot.hasError) {
-                              return const Center(
-                                  child: Text('No connection'));
+                              return const Center(child: Text('No connection'));
                             } else {
                               final skillsToDisplay = snapshot.data ?? [];
                               final skillPreviewCards = skillsToDisplay
@@ -138,7 +137,9 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                                                       child: Text(
                                                     'Create new skill',
                                                     textAlign: TextAlign.center,
-                                                        style: Theme.of(context).textTheme.titleLarge,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .titleLarge,
                                                   )),
                                                   IconButton(
                                                     onPressed: () {

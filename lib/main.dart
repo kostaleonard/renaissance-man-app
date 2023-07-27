@@ -22,15 +22,14 @@ class RenaissanceManApp extends StatelessWidget {
     return MaterialApp(
         title: appTitle,
         theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch(
+            colorScheme: ColorScheme.fromSwatch(
               primarySwatch: Colors.green,
               accentColor: const Color(0xff06fcbe),
-          ),
-          cardTheme: const CardTheme(
-            color: Color(0xffc7ffbc),
-            margin: EdgeInsets.zero,
-          )
-        ),
+            ),
+            cardTheme: const CardTheme(
+              color: Color(0xffc7ffbc),
+              margin: EdgeInsets.zero,
+            )),
         home: SkillSelectPage(
           repository: repository,
         ));
