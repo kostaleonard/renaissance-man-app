@@ -18,7 +18,6 @@ class SkillSelectPage extends StatefulWidget {
 }
 
 class _SkillSelectPageState extends State<SkillSelectPage> {
-  static const _biggerFont = TextStyle(fontSize: 18);
   static const _gridViewPadding = 20.0;
   static const _gridViewMainAxisSpacing = 25.0;
   static const _gridViewCrossAxisSpacing = 10.0;
@@ -69,8 +68,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                                   child: CircularProgressIndicator());
                             } else if (snapshot.hasError) {
                               return const Center(
-                                  child: Text('No connection',
-                                      style: _biggerFont));
+                                  child: Text('No connection'));
                             } else {
                               final skillsToDisplay = snapshot.data ?? [];
                               final skillPreviewCards = skillsToDisplay
@@ -78,7 +76,6 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
                                       repository: widget.repository,
                                       skillId: skill.id))
                                   .toList(growable: false);
-                              //TODO make this button more muted so that it doesn't stand out
                               final addSkillButton = CupertinoButton.filled(
                                   onPressed: () {
                                     setState(() {

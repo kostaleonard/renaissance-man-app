@@ -20,7 +20,6 @@ class SkillPreviewCard extends StatefulWidget {
 }
 
 class _SkillPreviewCardState extends State<SkillPreviewCard> {
-  static const _errorMessageFont = TextStyle(fontSize: 18);
   late Future<Skill> readSkillQuery;
   late Future<List<WeeklyPracticeSchedule>> readWeeklyPracticeScheduleQuery;
 
@@ -46,7 +45,7 @@ class _SkillPreviewCardState extends State<SkillPreviewCard> {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
                 return const Center(
-                    child: Text('No connection', style: _errorMessageFont));
+                    child: Text('No connection'));
               } else {
                 final skill = snapshot.data!;
                 return Card(
@@ -83,8 +82,7 @@ class _SkillPreviewCardState extends State<SkillPreviewCard> {
                                         child: CircularProgressIndicator());
                                   } else if (snapshot.hasError) {
                                     return const Center(
-                                        child: Text('No connection',
-                                            style: _errorMessageFont));
+                                        child: Text('No connection'));
                                   } else {
                                     final weeklyPracticeSchedules =
                                         snapshot.data!;
