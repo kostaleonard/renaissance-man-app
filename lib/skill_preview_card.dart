@@ -11,7 +11,6 @@ import 'package:renaissance_man/weekly_practice_schedule.dart';
 class SkillPreviewCard extends StatefulWidget {
   final Repository repository;
   final int skillId;
-  static const height = 298.0;
 
   const SkillPreviewCard(
       {super.key, required this.repository, required this.skillId});
@@ -21,7 +20,6 @@ class SkillPreviewCard extends StatefulWidget {
 }
 
 class _SkillPreviewCardState extends State<SkillPreviewCard> {
-  static const _biggerFont = TextStyle(fontSize: 18);
   late Future<Skill> readSkillQuery;
   late Future<List<WeeklyPracticeSchedule>> readWeeklyPracticeScheduleQuery;
 
@@ -46,8 +44,7 @@ class _SkillPreviewCardState extends State<SkillPreviewCard> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasError) {
-                return const Center(
-                    child: Text('No connection', style: _biggerFont));
+                return const Center(child: Text('No connection'));
               } else {
                 final skill = snapshot.data!;
                 return Card(
@@ -59,40 +56,67 @@ class _SkillPreviewCardState extends State<SkillPreviewCard> {
                           .onSurface
                           .withOpacity(0.12),
                       highlightColor: Colors.transparent,
-                      child: Column(children: [
-                        Text(skill.name),
-                        FutureBuilder(
-                            future: readWeeklyPracticeScheduleQuery,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else if (snapshot.hasError) {
-                                return const Center(
-                                    child: Text('No connection',
-                                        style: _biggerFont));
-                              } else {
-                                final weeklyPracticeSchedules = snapshot.data!;
-                                final now = DateTime.now();
-                                final today =
-                                    DateTime(now.year, now.month, now.day);
-                                final weeklyPracticeSchedulesTotalDuration =
-                                    weeklyPracticeSchedules.map((schedule) =>
-                                        schedule.getTimePracticedBetween(
-                                            schedule.startRecurrence,
-                                            schedule.endRecurrence ?? today));
-                                final totalPracticeDuration =
-                                    weeklyPracticeSchedules.isEmpty
-                                        ? Duration.zero
-                                        : weeklyPracticeSchedulesTotalDuration
-                                            .reduce((value, element) =>
-                                                value + element);
-                                return Text(_getDurationDisplayString(
-                                    totalPracticeDuration));
-                              }
-                            })
-                      ])),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                                child: Padding(
+                                    padding: const EdgeInsets.only(
+                                        left: 8.0,
+                                        top: 8.0,
+                                        right: 8.0,
+                                        bottom: 4.0),
+                                    child: Text(
+                                      skill.name,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall,
+                                    ))),
+                            FutureBuilder(
+                                future: readWeeklyPracticeScheduleQuery,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  } else if (snapshot.hasError) {
+                                    return const Center(
+                                        child: Text('No connection'));
+                                  } else {
+                                    final weeklyPracticeSchedules =
+                                        snapshot.data!;
+                                    final now = DateTime.now();
+                                    final today =
+                                        DateTime(now.year, now.month, now.day);
+                                    final weeklyPracticeSchedulesTotalDuration =
+                                        weeklyPracticeSchedules.map(
+                                            (schedule) => schedule
+                                                .getTimePracticedBetween(
+                                                    schedule.startRecurrence,
+                                                    schedule.endRecurrence ??
+                                                        today));
+                                    final totalPracticeDuration =
+                                        weeklyPracticeSchedules.isEmpty
+                                            ? Duration.zero
+                                            : weeklyPracticeSchedulesTotalDuration
+                                                .reduce((value, element) =>
+                                                    value + element);
+                                    return Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 8.0,
+                                            top: 4.0,
+                                            right: 8.0,
+                                            bottom: 4.0),
+                                        child: Text(
+                                          _getDurationDisplayString(
+                                              totalPracticeDuration),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium,
+                                        ));
+                                  }
+                                })
+                          ])),
                 );
               }
             });

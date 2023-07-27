@@ -18,7 +18,6 @@ class SkillPage extends StatefulWidget {
 }
 
 class _SkillPageState extends State<SkillPage> {
-  static const _biggerFont = TextStyle(fontSize: 18);
   late Future<Skill> readAndUpdateSkillQuery;
   late Future<List<WeeklyPracticeSchedule>> readWeeklyPracticeScheduleQuery;
   late DateTime newWeeklyPracticeScheduleStartDate;
@@ -46,7 +45,7 @@ class _SkillPageState extends State<SkillPage> {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return const Center(child: Text('No connection', style: _biggerFont));
+          return const Center(child: Text('No connection'));
         } else {
           final skill = snapshot.data!;
           //TODO always show header column
@@ -58,8 +57,7 @@ class _SkillPageState extends State<SkillPage> {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
-                      return const Center(
-                          child: Text('No connection', style: _biggerFont));
+                      return const Center(child: Text('No connection'));
                     } else {
                       final weeklyPracticeSchedules = snapshot.data!;
                       final now = DateTime.now();
@@ -233,6 +231,9 @@ class _SkillPageState extends State<SkillPage> {
                                             context: context,
                                             title:
                                                 'Select practice duration in minutes',
+                                            headerColor: Theme.of(context)
+                                                .colorScheme
+                                                .primary,
                                             maxNumber: 60 * 24,
                                             minNumber: 0,
                                             selectedNumber:
@@ -254,6 +255,9 @@ class _SkillPageState extends State<SkillPage> {
                                               context: context,
                                               title:
                                                   'Select practices per week',
+                                              headerColor: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
                                               maxNumber: 7 * 10,
                                               minNumber: 0,
                                               selectedNumber:

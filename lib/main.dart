@@ -6,7 +6,6 @@ import 'package:renaissance_man/repository.dart';
 import 'package:renaissance_man/in_memory_repository.dart';
 
 void main() {
-  //TODO remove delay--it's only for seeing how UI components render
   runApp(RenaissanceManApp(
       repository: InMemoryRepository(withDelay: Duration.zero)));
 }
@@ -23,9 +22,14 @@ class RenaissanceManApp extends StatelessWidget {
     return MaterialApp(
         title: appTitle,
         theme: ThemeData(
-          appBarTheme: const AppBarTheme(
-              backgroundColor: Colors.blueGrey, foregroundColor: Colors.white),
-        ),
+            colorScheme: ColorScheme.fromSwatch(
+              primarySwatch: Colors.green,
+              accentColor: const Color(0xff06fcbe),
+            ),
+            cardTheme: const CardTheme(
+              color: Color(0xffc7ffbc),
+              margin: EdgeInsets.zero,
+            )),
         home: SkillSelectPage(
           repository: repository,
         ));
