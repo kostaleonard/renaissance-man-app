@@ -21,7 +21,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
   static const _gridViewPadding = 20.0;
   static const _gridViewMainAxisSpacing = 25.0;
   static const _gridViewCrossAxisSpacing = 10.0;
-  static const _gridViewMaxCrossAxisExtent = 350.0;
+  static const _gridViewMaxCrossAxisExtent = 300.0;
   late TextEditingController _textEditingController;
   late FocusNode _textFieldFocusNode;
   bool _showCreateSkillWindow = false;
@@ -55,7 +55,7 @@ class _SkillSelectPageState extends State<SkillSelectPage> {
             //TODO the limit on column width with SizedBox is nice, but the scrollbar is only within the column
             body: Center(
                 child: SizedBox(
-                    width: 1200,
+                    width: 1000,
                     child: Column(
                       children: [
                         //TODO when we add users, this future will be to get all the skill IDs that belong to a user. That will be more efficient.
