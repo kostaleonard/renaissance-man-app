@@ -14,7 +14,7 @@ class SkillSelectPage extends StatefulWidget {
   const SkillSelectPage({Key? key, required this.repository}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SkillSelectPageState();
+  State<SkillSelectPage> createState() => _SkillSelectPageState();
 }
 
 class _SkillSelectPageState extends State<SkillSelectPage> {

@@ -1,9 +1,12 @@
 /// Runs the app.
 
 import 'package:flutter/material.dart';
+import 'package:renaissance_man/routes.dart';
 import 'package:renaissance_man/skill_select_page.dart';
 import 'package:renaissance_man/repository.dart';
 import 'package:renaissance_man/in_memory_repository.dart';
+
+import 'login_page.dart';
 
 void main() {
   runApp(RenaissanceManApp(
@@ -21,6 +24,11 @@ class RenaissanceManApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         title: appTitle,
+        initialRoute: loginRoute,
+        routes: {
+          homeRoute: (context) => SkillSelectPage(repository: repository,),
+          loginRoute: (context) => LoginPage()
+        },
         theme: ThemeData(
             colorScheme: ColorScheme.fromSwatch(
               primarySwatch: Colors.green,
@@ -30,8 +38,6 @@ class RenaissanceManApp extends StatelessWidget {
               color: Color(0xffc7ffbc),
               margin: EdgeInsets.zero,
             )),
-        home: SkillSelectPage(
-          repository: repository,
-        ));
+        );
   }
 }
