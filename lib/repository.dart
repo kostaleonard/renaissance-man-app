@@ -79,7 +79,7 @@ abstract class Repository {
   /// [ArgumentError].
   Future<void> deleteWeeklyPracticeSchedule(int id);
 
-  Future<String> getSaltedPasswordHash(String username);
-
-  Future<String> getPasswordSalt(String username);
+  /// Returns a token that provides access to a specific user's data.
+  /// TODO
+  Future<String?> getAuthenticatedSessionToken(String emailAddress, String saltedPasswordHashGuess);
 }
