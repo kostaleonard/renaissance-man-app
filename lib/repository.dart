@@ -78,4 +78,8 @@ abstract class Repository {
   /// If there is no [WeeklyPracticeSchedule] with ID [id], throws an
   /// [ArgumentError].
   Future<void> deleteWeeklyPracticeSchedule(int id);
+
+  Future<String> getSaltedPasswordHash(String username);
+
+  Future<String> getPasswordSalt(String username);
 }
