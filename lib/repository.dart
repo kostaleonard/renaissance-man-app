@@ -79,6 +79,7 @@ abstract class Repository {
   /// [ArgumentError].
   Future<void> deleteWeeklyPracticeSchedule(int id);
 
+  //TODO authenticate with Firebase: https://pub.dev/packages/firebase_auth
   /// Returns a token that provides access to a specific user's data.
   /// TODO how this works:
   /// The user submits an email address and password to authenticate. The app
