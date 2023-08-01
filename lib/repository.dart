@@ -80,6 +80,16 @@ abstract class Repository {
   Future<void> deleteWeeklyPracticeSchedule(int id);
 
   /// Returns a token that provides access to a specific user's data.
-  /// TODO
-  Future<String?> getAuthenticatedSessionToken(String emailAddress, String saltedPasswordHashGuess);
+  /// TODO how this works:
+  /// The user submits an email address and password to authenticate. The app
+  /// sends the email and password to the API server, which calculates the
+  /// salted hash of the password and compares it to the salted, hashed password
+  /// it has stored. If they match, the API server generates a session token
+  /// that is valid for the next, say, 15 minutes. The API server stores the
+  /// session token and the user with whom it is associated in the database so
+  /// that the API server is stateless. The API server sends the session token
+  /// back to the user. The user includes the session token in all future
+  /// requests. Every time it receives a valid request, the API server extends
+  /// the lifetime of the session token.
+  Future<String?> getAuthenticatedSessionToken(String emailAddress, String password);
 }
